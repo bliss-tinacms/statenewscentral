@@ -83,6 +83,15 @@ async function assertRoutes() {
     }
     results.push({ path: route.path, status: response.status, family: route.family, signatureCount: currentStructure.length });
   }
+  const legacyBlog = await fetchPage('/blog/what-rising-insurance-premiums-mean-for-household-budgets/');
+  if (legacyBlog.status !== 301 || legacyBlog.headers.get('location') !== '/what-rising-insurance-premiums-mean-for-household-budgets/') {
+    throw new Error(`legacy-blog-redirect:${legacyBlog.status}:${legacyBlog.headers.get('location') || 'missing'}`);
+  }
+  const legacyPage = await fetchPage('/blog/privacy-policy/');
+  const legacyPageHtml = await legacyPage.text();
+  if (legacyPage.status !== 404 || !/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(legacyPageHtml)) {
+    throw new Error(`legacy-page-blog-route:${legacyPage.status}`);
+  }
   const article = load(htmlByPath.get('/what-rising-insurance-premiums-mean-for-household-budgets/') || '');
   const badges = article('[data-article-category]');
   if (badges.length !== 2) throw new Error(`article-category-cardinality:expected-2:got-${badges.length}`);

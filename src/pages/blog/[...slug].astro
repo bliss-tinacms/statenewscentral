@@ -7,7 +7,10 @@ export const prerender = false;
 const routeSlug = (Astro.params.slug ?? '').toString();
 const allPosts = await listBlogs();
 const matchedPost = allPosts.find((post) => getBlogRouteSlug(post) === routeSlug || post._sys.filename === routeSlug);
-if (!matchedPost) return Astro.rewrite('/' + routeSlug + '/');
+// `/blog/*` is a compatibility redirect for Blog documents only. Rewriting an
+// unmatched slug to the root route accidentally made Pages such as
+// `/blog/privacy-policy/` render with HTTP 200 under a non-canonical URL.
+if (!matchedPost) return Astro.rewrite('/__legacy-blog-route-not-found__/');
 const target = getBlogPermalink(matchedPost) + '/';
 return Astro.redirect(target, 301);
 ---
