@@ -1,12 +1,33 @@
 {
   "title": "Legal Navigation",
   "items": [
-    { "label": "Privacy", "href": "/privacy-policy/" },
-    { "label": "Terms", "href": "/terms-of-use/" },
-    { "label": "Cookie", "href": "/cookie-policy/" },
-    { "label": "AI", "href": "/ai-policy/" },
-    { "label": "DMCA", "href": "/dmca-policy/" },
-    { "label": "Sponsored", "href": "/sponsored-content-policy/" },
-    { "label": "Sitemap", "href": "/sitemap/" }
+    {
+      "label": "Privacy QA 20261023",
+      "href": "/privacy-policy/"
+    },
+    {
+      "label": "Terms",
+      "href": "/terms-of-use/"
+    },
+    {
+      "label": "Cookie",
+      "href": "/cookie-policy/"
+    },
+    {
+      "label": "AI",
+      "href": "/ai-policy/"
+    },
+    {
+      "label": "DMCA",
+      "href": "/dmca-policy/"
+    },
+    {
+      "label": "Sponsored",
+      "href": "/sponsored-content-policy/"
+    },
+    {
+      "label": "Sitemap",
+      "href": "/sitemap/"
+    }
   ]
 }
