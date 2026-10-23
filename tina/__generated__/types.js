@@ -12,6 +12,7 @@ export const BlogPartsFragmentDoc = gql`
   title
   permalink
   description
+  draft
   seo {
     __typename
     metaTitle
@@ -96,6 +97,7 @@ export const PagePartsFragmentDoc = gql`
   __typename
   viewPageShortcut
   title
+  draft
   permalink
   seo {
     __typename
@@ -548,6 +550,7 @@ export const ConfigPartsFragmentDoc = gql`
     logo
     favicon
     footerLogo
+    defaultSocialImage
   }
   contactForm {
     __typename
@@ -581,6 +584,12 @@ export const ConfigPartsFragmentDoc = gql`
       label
       href
     }
+  }
+  redirects {
+    __typename
+    from
+    to
+    status
   }
   codeInjection {
     __typename

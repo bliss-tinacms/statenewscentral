@@ -1,13 +1,26 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
-import DemoCategoryArchive from './DemoCategoryArchive.astro';
-const { archiveTitle='Author', author=null, posts=[], currentPage=1, totalPages=1, basePath='/' }=Astro.props;
-const role=author?.role||'Contributor';
-const location=author?.location||'';
+import authorHtml from '../../data/demo-html/author.html?raw';
+import { getConfig } from '../../lib/data';
+import { renderAuthorDemo } from '../../lib/state-news-demo-render';
+
+const { author, posts = [], title, archiveTitle, currentPage, totalPages, basePath } = Astro.props;
+const config = (await getConfig()).data?.config ?? null;
+const resolvedTitle = author?.name || archiveTitle || title || 'Author';
+const normalizedAuthor = author || { name: resolvedTitle, _sys: { filename: String(resolvedTitle).toLowerCase().replace(/[^a-z0-9]+/g, '-') } };
+const queryPage = Number(Astro.url.searchParams.get('page') || '1');
+const html = renderAuthorDemo(authorHtml, {
+  author: normalizedAuthor,
+  posts,
+  page: currentPage || (Number.isFinite(queryPage) ? queryPage : 1),
+  totalPages,
+  basePath: basePath ? `${String(basePath).replace(/\/$/, '')}/` : undefined,
+  config,
+  fields: author ? {
+    name: tinaField(author, 'name'),
+    avatar: tinaField(author, 'avatar'),
+    bio: tinaField(author, 'bio'),
+  } : {},
+});
 ---
-<section style="background:#f1f6f2"><div style="max-width:1320px;margin:0 auto;padding:clamp(44px,6vw,88px) clamp(16px,3vw,32px);display:grid;grid-template-columns:minmax(160px,260px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center" class="snd-author-hero">
-  <div>{author?.avatar&&<img src={author.avatar} alt={archiveTitle} data-tina-field={tinaField(author,'avatar')} style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:28px"/>}</div>
-  <div style="display:flex;flex-direction:column;gap:14px"><span style="color:#1e6b4f;font-weight:700;font-size:15px">{role}</span><h1 data-tina-field={tinaField(author,'name')} style="font-family:'Young Serif',serif;font-size:clamp(44px,5.6vw,80px);font-weight:400;line-height:1.04;letter-spacing:-.03em;margin:0;color:#17392c">{archiveTitle}</h1>{author?.bio&&<p data-tina-field={tinaField(author,'bio')} style="max-width:780px;margin:0;font-size:18px;line-height:1.7;color:#2c4238">{author.bio}</p>}{location&&<span style="font-size:15px;color:#5b6e64">{location}</span>}</div>
-</div></section>
-<DemoCategoryArchive showHeading={false} archiveTitle={archiveTitle} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
-<style>@media(max-width:700px){.snd-author-hero{grid-template-columns:1fr!important}.snd-author-hero>div:first-child{max-width:220px}}</style>
+<div class="state-news-authority-fragment" set:html={html} />

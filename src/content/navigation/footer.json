@@ -1,29 +1,11 @@
 {
   "title": "Footer Navigation",
   "items": [
-    {
-      "label": "About Us",
-      "href": "/about/"
-    },
-    {
-      "label": "Our Team",
-      "href": "/our-team/"
-    },
-    {
-      "label": "Contact Us",
-      "href": "/contact/"
-    },
-    {
-      "label": "Editorial Guidelines",
-      "href": "/editorial-guidelines/"
-    },
-    {
-      "label": "Privacy Policy",
-      "href": "/privacy-policy/"
-    },
-    {
-      "label": "Terms of Use",
-      "href": "/terms-of-use/"
-    }
+    { "label": "Home", "href": "/" },
+    { "label": "About Us", "href": "/about/" },
+    { "label": "Our Team", "href": "/our-team/" },
+    { "label": "Contact Us", "href": "/contact/" },
+    { "label": "Blog", "href": "/blog/" },
+    { "label": "Write for Us", "href": "/write-for-us/" }
   ]
 }

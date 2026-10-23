@@ -4,9 +4,11 @@ import { listBlogs } from '../../lib/data';
 const { category } = Astro.props;
 const slug = category?._sys?.filename || '';
 const normalize=(v:any)=>String(typeof v==='string'?v:(v?._sys?.filename||v?.title||'')).split('/').pop()?.replace(/\.(json|mdx?)$/,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const posts=(await listBlogs()).filter((post:any)=>{
+const allPosts=(await listBlogs()).filter((post:any)=>{
  const refs=Array.isArray(post.categories)?post.categories:(post.category?[post.category]:[]);
  return refs.some((ref:any)=>normalize(ref)===normalize(slug));
 });
+const posts=allPosts.slice(0,6);
+const totalPages=Math.max(1,Math.ceil(allPosts.length/6));
 ---
-<DemoCategoryArchive archiveTitle={category?.title || 'Category'} category={category} posts={posts} currentPage={1} totalPages={1} basePath={`/${slug}`} />
+<DemoCategoryArchive archiveTitle={category?.title || 'Category'} category={category} posts={posts} currentPage={1} totalPages={totalPages} basePath={`/${slug}`} />

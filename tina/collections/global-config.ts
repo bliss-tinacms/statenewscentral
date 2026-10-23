@@ -49,12 +49,8 @@ export const GlobalConfigCollection: Collection = {
           type: "image",
           description: "Upload the browser tab/site icon. Recommended: square PNG, SVG, or ICO.",
         },
-        {
-          name: "footerLogo",
-          label: "Footer Logo",
-          type: "image",
-          description: "Upload the logo used in the footer. Falls back to the header logo when empty.",
-        },
+        { name: "footerLogo", label: "Footer Logo", type: "image", description: "Upload the logo used in the footer. Falls back to the header logo when empty." },
+        { name: "defaultSocialImage", label: "Default Social Image", type: "image", description: "Fallback Open Graph image used when a page or post does not provide one." },
       ],
     },
     {
@@ -107,6 +103,18 @@ export const GlobalConfigCollection: Collection = {
             { name: "href", label: "URL", type: "string" },
           ],
         },
+      ],
+    },
+    {
+      name: "redirects",
+      label: "Redirects",
+      type: "object",
+      list: true,
+      ui: { itemProps: (item) => ({ label: `${item.from || 'Source'} → ${item.to || 'Destination'}` }) },
+      fields: [
+        { name: "from", label: "Source path", type: "string" },
+        { name: "to", label: "Destination path", type: "string" },
+        { name: "status", label: "Status", type: "number", description: "Use 301 for permanent or 302 for temporary." },
       ],
     },
     {

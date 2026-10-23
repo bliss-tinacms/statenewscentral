@@ -7,17 +7,16 @@ import PageBody from '../components/islands/PageBody.astro';
 import BlogBody from '../components/islands/BlogBody.astro';
 import DemoCategoryArchive from '../components/demo/DemoCategoryArchive.astro';
 import Demo404 from '../components/demo/Demo404.astro';
-import FrontPage from '../templates/FrontPage.astro';
-import { getBlog, getCategory, getConfig, getPublicPage, listBlogs, listCategories, listLocalPages, listPages, type CmsCategory, type CmsPage } from '../lib/data';
+import { getBlog, getCategory, getConfig, getPublicPage, isPublishedBlog, isPublishedPage, listBlogs, listCategories, listLocalPages, listPages, type CmsCategory, type CmsPage } from '../lib/data';
 import { islands } from '../lib/islands';
 
 export const prerender = false;
 
-const POSTS_PER_PAGE = 30;
+const POSTS_PER_PAGE = 6;
 const routeSlug = (Astro.params.slug ?? '').toString().toLowerCase().replace(/^\/+|\/+$/g, '');
 const config = (await getConfig()).data?.config ?? null;
 const livePages = await listPages();
-const localPages = listLocalPages();
+const localPages = listLocalPages().filter(isPublishedPage);
 const allPagesByFilename = new Map(localPages.map((page: any) => [String(page?._sys?.filename || page?.permalink || page?.title), page]));
 for (const page of livePages) allPagesByFilename.set(String(page?._sys?.filename || page?.permalink || page?.title), page);
 const allPages = [...allPagesByFilename.values()];
@@ -73,8 +72,12 @@ function getPostCategories(post: any) {
 function parseArchiveParam(value?: string) {
   const parts = String(value || '').toLowerCase().split('/').filter(Boolean);
   const pageIndex = parts.indexOf('page');
-  if (pageIndex >= 0) return { slug: parts.slice(0, pageIndex).join('/'), page: Math.max(1, Number(parts[pageIndex + 1] || '1') || 1) };
-  return { slug: parts.join('/'), page: 1 };
+  if (pageIndex >= 0) {
+    const pageValue = parts[pageIndex + 1] || '';
+    const valid = pageIndex === parts.length - 2 && /^\d+$/.test(pageValue) && Number(pageValue) >= 1;
+    return { slug: parts.slice(0, pageIndex).join('/'), page: valid ? Number(pageValue) : Number.NaN, valid };
+  }
+  return { slug: parts.join('/'), page: 1, valid: true };
 }
 function categoryFileMap(categories: any[]) {
   const map = new Map<string, { label: string; filename: string; data: CmsCategory | null }>();
@@ -127,27 +130,29 @@ if (view === 'not-found') {
   if (categoryEntry) {
     const allCategoryPosts = allPosts.filter((post) => slugsFromReference(getPostCategories(post)).includes(parsed.slug));
     const totalPages = Math.max(1, Math.ceil(allCategoryPosts.length / POSTS_PER_PAGE));
-    const currentPage = Math.min(Math.max(1, parsed.page), totalPages);
-    const posts = allCategoryPosts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
-    const editableCategory = (await getCategory(categoryEntry.filename || parsed.slug)).data?.category ?? null;
-    const categoryFromPosts = editableCategory || (findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null) || categoryEntry.data;
-    const archiveTitle = editableCategory?.title || labelFromReference(findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug)) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
-    const categorySeo = (editableCategory as any)?.seo || (categoryFromPosts as any)?.seo || (categoryEntry.data as any)?.seo || null;
-    view = 'category';
-    categoryContext = {
-      parsed,
-      posts,
-      totalPages,
-      currentPage,
-      categoryFromPosts,
-      archiveTitle,
-      categoryDocumentSlug: categoryEntry.filename || categoryFromPosts?._sys?.filename || archiveTitle,
-      basePath: '/' + parsed.slug,
-      hasPosts: posts.length > 0,
-      seo: categorySeo,
-      seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest'),
-      description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Digest.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Digest.'),
-    };
+    if (parsed.valid && parsed.page <= totalPages) {
+      const currentPage = parsed.page;
+      const posts = allCategoryPosts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
+      const editableCategory = (await getCategory(categoryEntry.filename || parsed.slug)).data?.category ?? null;
+      const categoryFromPosts = editableCategory || (findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null) || categoryEntry.data;
+      const archiveTitle = editableCategory?.title || labelFromReference(findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug)) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
+      const categorySeo = (editableCategory as any)?.seo || (categoryFromPosts as any)?.seo || (categoryEntry.data as any)?.seo || null;
+      view = 'category';
+      categoryContext = {
+        parsed,
+        posts,
+        totalPages,
+        currentPage,
+        categoryFromPosts,
+        archiveTitle,
+        categoryDocumentSlug: categoryEntry.filename || categoryFromPosts?._sys?.filename || archiveTitle,
+        basePath: '/' + parsed.slug,
+        hasPosts: posts.length > 0,
+        seo: categorySeo,
+        seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest'),
+        description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Digest.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Digest.'),
+      };
+    }
   }
 }
 
@@ -156,7 +161,7 @@ if (view === 'not-found') {
   const documentSlug = matchedPost?._sys?.filename ?? routeSlug;
   const blog = await getBlog(documentSlug);
   const data = blog.data?.blog;
-  if (data?.title || data?._sys?.filename) {
+  if (isPublishedBlog(data) && (data?.title || data?._sys?.filename)) {
       const canonicalSlug = getBlogRouteSlug(data);
       if (canonicalSlug && canonicalSlug !== routeSlug) return Astro.redirect(getBlogPermalink(data) + '/', 301);
       const currentCategoryKeys = getReferenceKeys(getPostCategories(data));
@@ -212,11 +217,9 @@ if (view === 'not-found') {
     noindex={pageData.seo?.noindex || false}
     nofollow={pageData.seo?.nofollow || false}
   >
-    {routeSlug === ''
-      ? <FrontPage data={pageData} editData={pageData} config={config} posts={allPosts} />
-      : <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug: pageData._sys?.filename || routeSlug }} primary>
-          <PageBody data={pageData} config={config} />
-        </TinaIsland>}
+    <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug: pageData._sys?.filename || routeSlug || 'home' }} primary>
+      <PageBody data={pageData} config={config} posts={allPosts} categories={allCategories} />
+    </TinaIsland>
   </Base>
 )}
 
@@ -227,7 +230,7 @@ if (view === 'not-found') {
     image={categoryContext.seo?.ogImage || undefined}
     ogTitle={categoryContext.seo?.ogTitle || categoryContext.seoTitle}
     ogDescription={categoryContext.seo?.ogDescription || categoryContext.description}
-    canonicalUrl={categoryContext.seo?.canonicalUrl || categoryContext.basePath + '/'}
+    canonicalUrl={categoryContext.seo?.canonicalUrl || (categoryContext.currentPage > 1 ? `${categoryContext.basePath}/page/${categoryContext.currentPage}/` : categoryContext.basePath + '/')}
     noindex={categoryContext.seo?.noindex || false}
     nofollow={categoryContext.seo?.nofollow || false}
   >

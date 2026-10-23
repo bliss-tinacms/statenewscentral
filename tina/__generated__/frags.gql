@@ -4,6 +4,7 @@ fragment BlogParts on Blog {
   title
   permalink
   description
+  draft
   seo {
     __typename
     metaTitle
@@ -86,6 +87,7 @@ fragment PageParts on Page {
   __typename
   viewPageShortcut
   title
+  draft
   permalink
   seo {
     __typename
@@ -535,6 +537,7 @@ fragment ConfigParts on Config {
     logo
     favicon
     footerLogo
+    defaultSocialImage
   }
   contactForm {
     __typename
@@ -568,6 +571,12 @@ fragment ConfigParts on Config {
       label
       href
     }
+  }
+  redirects {
+    __typename
+    from
+    to
+    status
   }
   codeInjection {
     __typename

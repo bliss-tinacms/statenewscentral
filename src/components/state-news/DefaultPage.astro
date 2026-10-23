@@ -1,0 +1,13 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import pageHtml from '../../data/demo-html/page.html?raw';
+import { renderDefaultPageDemo } from '../../lib/state-news-demo-render';
+
+const { data, config = null } = Astro.props;
+const html = renderDefaultPageDemo(pageHtml, {
+  page: data,
+  config,
+  fields: data ? { title: tinaField(data, 'title') } : {},
+});
+---
+<Fragment set:html={html} />

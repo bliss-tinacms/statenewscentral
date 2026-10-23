@@ -120,6 +120,7 @@ type Blog implements Node & Document {
   title: String!
   permalink: String
   description: String
+  draft: Boolean
   seo: BlogSeo
   pubDate: String
   updatedDate: String
@@ -142,16 +143,16 @@ input StringFilter {
   in: [String]
 }
 
+input BooleanFilter {
+  eq: Boolean
+  exists: Boolean
+}
+
 input ImageFilter {
   startsWith: String
   eq: String
   exists: Boolean
   in: [String]
-}
-
-input BooleanFilter {
-  eq: Boolean
-  exists: Boolean
 }
 
 input BlogSeoFilter {
@@ -190,6 +191,7 @@ input BlogFilter {
   title: StringFilter
   permalink: StringFilter
   description: StringFilter
+  draft: BooleanFilter
   seo: BlogSeoFilter
   pubDate: DatetimeFilter
   updatedDate: DatetimeFilter
@@ -668,6 +670,7 @@ union PageBlocks = PageBlocksHomepageTemplate | PageBlocksAboutMockup17 | PageBl
 type Page implements Node & Document {
   viewPageShortcut: String
   title: String!
+  draft: Boolean
   permalink: String
   seo: PageSeo
   authorityTemplate: String
@@ -1093,6 +1096,7 @@ input PageBlocksFilter {
 input PageFilter {
   viewPageShortcut: StringFilter
   title: StringFilter
+  draft: BooleanFilter
   permalink: StringFilter
   seo: PageSeoFilter
   authorityTemplate: StringFilter
@@ -1234,6 +1238,7 @@ type ConfigSeo {
   logo: String
   favicon: String
   footerLogo: String
+  defaultSocialImage: String
 }
 
 type ConfigContactForm {
@@ -1270,6 +1275,12 @@ type ConfigNotFound {
   quickLinks: [ConfigNotFoundQuickLinks]
 }
 
+type ConfigRedirects {
+  from: String
+  to: String
+  status: Float
+}
+
 type ConfigCodeInjection {
   headerCode: String
   footerCode: String
@@ -1290,6 +1301,7 @@ type Config implements Node & Document {
   contributorCta: ConfigContributorCta
   footer: ConfigFooter
   notFound: ConfigNotFound
+  redirects: [ConfigRedirects]
   codeInjection: ConfigCodeInjection
   contactLinks: [ConfigContactLinks]
   footerStarfield: Boolean
@@ -1313,6 +1325,7 @@ input ConfigSeoFilter {
   logo: ImageFilter
   favicon: ImageFilter
   footerLogo: ImageFilter
+  defaultSocialImage: ImageFilter
 }
 
 input ConfigContactFormFilter {
@@ -1349,6 +1362,12 @@ input ConfigNotFoundFilter {
   quickLinks: ConfigNotFoundQuickLinksFilter
 }
 
+input ConfigRedirectsFilter {
+  from: StringFilter
+  to: StringFilter
+  status: NumberFilter
+}
+
 input ConfigCodeInjectionFilter {
   headerCode: StringFilter
   footerCode: StringFilter
@@ -1369,6 +1388,7 @@ input ConfigFilter {
   contributorCta: ConfigContributorCtaFilter
   footer: ConfigFooterFilter
   notFound: ConfigNotFoundFilter
+  redirects: ConfigRedirectsFilter
   codeInjection: ConfigCodeInjectionFilter
   contactLinks: ConfigContactLinksFilter
   footerStarfield: BooleanFilter
@@ -1440,6 +1460,7 @@ input BlogMutation {
   title: String
   permalink: String
   description: String
+  draft: Boolean
   seo: BlogSeoMutation
   pubDate: String
   updatedDate: String
@@ -1877,6 +1898,7 @@ input PageBlocksMutation {
 input PageMutation {
   viewPageShortcut: String
   title: String
+  draft: Boolean
   permalink: String
   seo: PageSeoMutation
   authorityTemplate: String
@@ -1935,6 +1957,7 @@ input ConfigSeoMutation {
   logo: String
   favicon: String
   footerLogo: String
+  defaultSocialImage: String
 }
 
 input ConfigContactFormMutation {
@@ -1971,6 +1994,12 @@ input ConfigNotFoundMutation {
   quickLinks: [ConfigNotFoundQuickLinksMutation]
 }
 
+input ConfigRedirectsMutation {
+  from: String
+  to: String
+  status: Float
+}
+
 input ConfigCodeInjectionMutation {
   headerCode: String
   footerCode: String
@@ -1991,6 +2020,7 @@ input ConfigMutation {
   contributorCta: ConfigContributorCtaMutation
   footer: ConfigFooterMutation
   notFound: ConfigNotFoundMutation
+  redirects: [ConfigRedirectsMutation]
   codeInjection: ConfigCodeInjectionMutation
   contactLinks: [ConfigContactLinksMutation]
   footerStarfield: Boolean

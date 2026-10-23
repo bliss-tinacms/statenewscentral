@@ -319,7 +319,9 @@ export async function getConfig() {
 		config(relativePath: $relativePath) {
 			headerNavigation { ... on Navigation { _sys { relativePath } } }
 			footerNavigation { ... on Navigation { _sys { relativePath } } }
-			seo { title description siteOwner logo favicon footerLogo }
+			favicon
+			seo { title description siteOwner logo favicon footerLogo defaultSocialImage }
+			redirects { from to status }
 			contactForm { formspreeEndpoint heading description buttonText note subject }
 			contributorCta { eyebrow title description buttonText buttonLink }
 			footer { copyrightText }
@@ -521,7 +523,8 @@ export async function getBlog(slug: string) {
 		blog(relativePath: $relativePath) {
 			title
 			description
-			seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
+			draft
+			seo{ metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
 			permalink
 			pubDate
 			updatedDate
@@ -571,54 +574,50 @@ async function getLiveUser(slug: string) {
 
 export const getEditableUser = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
-	try {
-		return await requestWithMetadata(client.queries.user({ relativePath }), { priority: 'primary' });
-	} catch (error) {
-		const live = await fetchLiveTinaResult<{ user: any }>(UserDocument, { relativePath });
-		if (live?.data?.user) {
-			return requestWithMetadata(Promise.resolve({
-				data: live.data,
-				query: UserDocument,
-				variables: { relativePath },
-			}), { priority: 'primary' });
-		}
-		const localUser = readLocalJson('user', relativePath);
-		if (localUser) {
-			return requestWithMetadata(Promise.resolve({
-				data: { user: localUser as any },
-				query: UserDocument,
-				variables: { relativePath },
-			}), { priority: 'primary' });
-		}
-		throw error;
+	const generated = await requestWithMetadata(client.queries.user({ relativePath }), { priority: 'primary' });
+	if (generated?.data?.user) return generated;
+	const live = await fetchLiveTinaResult<{ user: any }>(UserDocument, { relativePath });
+	if (live?.data?.user) {
+		return requestWithMetadata(Promise.resolve({
+			data: live.data,
+			query: UserDocument,
+			variables: { relativePath },
+		}), { priority: 'primary' });
 	}
+	const localUser = readLocalJson('user', relativePath);
+	if (localUser) {
+		return requestWithMetadata(Promise.resolve({
+			data: { user: localUser as any },
+			query: UserDocument,
+			variables: { relativePath },
+		}), { priority: 'primary' });
+	}
+	throw new Error(`User document not found: ${relativePath}`);
 };
 
 export const getUser = (slug: string) => getLiveUser(slug);
 
 export const getEditableCategory = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
-	try {
-		return await requestWithMetadata(client.queries.category({ relativePath }), { priority: 'primary' });
-	} catch (error) {
-		const live = await fetchLiveTinaResult<{ category: any }>(CategoryDocument, { relativePath });
-		if (live?.data?.category) {
-			return requestWithMetadata(Promise.resolve({
-				data: live.data,
-				query: CategoryDocument,
-				variables: { relativePath },
-			}), { priority: 'primary' });
-		}
-		const localCategory = readLocalJson('category', relativePath);
-		if (localCategory) {
-			return requestWithMetadata(Promise.resolve({
-				data: { category: localCategory as any },
-				query: CategoryDocument,
-				variables: { relativePath },
-			}), { priority: 'primary' });
-		}
-		throw error;
+	const generated = await requestWithMetadata(client.queries.category({ relativePath }), { priority: 'primary' });
+	if (generated?.data?.category) return generated;
+	const live = await fetchLiveTinaResult<{ category: any }>(CategoryDocument, { relativePath });
+	if (live?.data?.category) {
+		return requestWithMetadata(Promise.resolve({
+			data: live.data,
+			query: CategoryDocument,
+			variables: { relativePath },
+		}), { priority: 'primary' });
 	}
+	const localCategory = readLocalJson('category', relativePath);
+	if (localCategory) {
+		return requestWithMetadata(Promise.resolve({
+			data: { category: localCategory as any },
+			query: CategoryDocument,
+			variables: { relativePath },
+		}), { priority: 'primary' });
+	}
+	throw new Error(`Category document not found: ${relativePath}`);
 };
 
 export async function getCategory(slug: string) {
@@ -666,12 +665,23 @@ export async function listCategories() {
 	return (result.data.categoryConnection.edges || []).flatMap((edge) => edge?.node ? [edge.node] : []);
 }
 
+export function isPublishedPage(page: any) {
+	return Boolean(page) && page.draft !== true;
+}
+
+export function isPublishedBlog(post: any, now = new Date()) {
+	if (!post || post.draft === true || !post.pubDate) return false;
+	const publishedAt = new Date(post.pubDate);
+	return !Number.isNaN(publishedAt.valueOf()) && publishedAt.valueOf() <= now.valueOf();
+}
+
 export async function listPages() {
 	const query = `query PageConnection {
 		pageConnection {
 			edges {
 				node {
 					title
+					draft
 					permalink
 					seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
 					_sys { filename }
@@ -683,13 +693,15 @@ export async function listPages() {
 	if (Array.isArray(livePages)) {
 		return livePages
 			.flatMap((edge) => (edge?.node ? [edge.node] : []))
+			.filter(isPublishedPage)
 			.map((node) => hydratePermalink('page', node));
 	}
 	const localPages = listLocalFrontmatter('page');
-	if (localPages) return localPages as any;
+	if (localPages) return (localPages as any[]).filter(isPublishedPage) as any;
 	const result = await client.queries.pageConnection();
 	return (result.data.pageConnection.edges ?? [])
 		.flatMap((edge) => (edge?.node ? [edge.node] : []))
+		.filter(isPublishedPage)
 		.map((node) => hydratePermalink('page', node));
 }
 
@@ -700,6 +712,7 @@ export async function listBlogs() {
 				node {
 					title
 					description
+					draft
 					permalink
 					pubDate
 					updatedDate
@@ -720,6 +733,7 @@ export async function listBlogs() {
 		: null;
 	if (nodes) {
 		return nodes
+			.filter((post) => isPublishedBlog(post))
 			.map((node) => hydrateBlogCategories(hydratePermalink('blog', node as any)))
 			.sort((a, b) => {
 				const ad = a.pubDate ? new Date(a.pubDate).valueOf() : 0;
@@ -729,7 +743,7 @@ export async function listBlogs() {
 	}
 	const localBlogs = listLocalFrontmatter('blog');
 	if (localBlogs) {
-		return (localBlogs as any[]).map((node) => hydrateBlogCategories(node)).sort((a, b) => {
+		return (localBlogs as any[]).filter((post) => isPublishedBlog(post)).map((node) => hydrateBlogCategories(node)).sort((a, b) => {
 			const ad = a.pubDate ? new Date(a.pubDate).valueOf() : 0;
 			const bd = b.pubDate ? new Date(b.pubDate).valueOf() : 0;
 			return bd - ad;
@@ -738,6 +752,7 @@ export async function listBlogs() {
 	const result = await client.queries.blogConnection();
 	return (result.data.blogConnection.edges ?? [])
 		.flatMap((edge) => (edge?.node ? [edge.node] : []))
+		.filter((post) => isPublishedBlog(post))
 		.map((node) => hydrateBlogCategories(hydratePermalink('blog', node as any)))
 		.sort((a, b) => {
 			const ad = a.pubDate ? new Date(a.pubDate).valueOf() : 0;

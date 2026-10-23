@@ -90,11 +90,12 @@ export const PageCollection: Collection = {
       slugify: (values) => slugifyFilename(values?.title || "untitled"),
     },
     router: ({ document }) => {
-      const slug =
+      const raw =
         cleanPublicSlug((document as any)?.permalink) ||
         filenameFromDocument(document);
+      const slug = slugifyFilename(raw).split("/").map((part) => part.replace(/[_.]+/g, "-")).filter(Boolean).join("/");
       if (!slug || slug === "home" || slug === "index") return "/";
-      return "/" + slug;
+      return "/" + slug + "/";
     },
   },
   fields: [
@@ -107,6 +108,12 @@ export const PageCollection: Collection = {
       required: true,
       description:
         "Main visible page title shown at the top of the frontend page.",
+    },
+    {
+      name: "draft",
+      label: "Draft (hide from the public site)",
+      type: "boolean",
+      description: "Enable while this page is not ready to publish.",
     },
     {
       name: "permalink",

@@ -71,11 +71,11 @@ def configured_collections() -> set[str]:
 def query_backend() -> dict:
     query = f"""
     query AllCollectionFullcheck {{
-      blog(relativePath: "hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals.mdx") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      blog(relativePath: "what-rising-insurance-premiums-mean-for-household-budgets.mdx") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
       blogs: blogConnection(first: 100) {{ edges {{ node {{ categories }} }} }}
       page(relativePath: "home.mdx") {{ title seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
-      category(relativePath: "Business.json") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
-      user(relativePath: "admin.json") {{ name role bio seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      category(relativePath: "business.json") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      user(relativePath: "cheryl-nielsen.json") {{ name role bio seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
       navigation(relativePath: "header.json") {{ title items {{ label href children {{ label href }} }} _sys {{ filename }} }}
       config(relativePath: "config.json") {{
         headerNavigation {{ ... on Navigation {{ _sys {{ relativePath }} }} }}
@@ -99,6 +99,7 @@ def query_backend() -> dict:
 def fetch_route(path: str) -> dict:
     response = requests.get(f"{SITE}{path}{'&' if '?' in path else '?'}tina-fullcheck={time.time_ns()}", headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "TINA-FULLCHECK"}, timeout=45)
     response.raise_for_status()
+    response.encoding = "utf-8"
     parser = DocumentParser(); parser.feed(response.text)
     return {"status": response.status_code, "cache": response.headers.get("cf-cache-status"), "html": unescape(response.text), "head": parser}
 
@@ -146,9 +147,9 @@ def main() -> int:
 
     routes = {
         "page": fetch_route("/"),
-        "blog": fetch_route("/hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals/"),
+        "blog": fetch_route("/what-rising-insurance-premiums-mean-for-household-budgets/"),
         "category": fetch_route("/business/"),
-        "user": fetch_route("/author/admin/"),
+        "user": fetch_route("/author/cheryl-nielsen/"),
     }
     config, page, blog, category, user = data["config"], data["page"], data["blog"], data["category"], data["user"]
     site_title = config.get("seo", {}).get("title") or "Starter Site"
@@ -163,9 +164,9 @@ def main() -> int:
     )
     seo_results = {
         "page": assert_seo("page", routes["page"], page.get("seo"), page.get("title") or site_title, config.get("seo", {}).get("description") or "", f"{SITE}/", failures),
-        "blog": assert_seo("blog", routes["blog"], blog.get("seo"), blog.get("title") or "", blog.get("description") or "", "/hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals/", failures),
+        "blog": assert_seo("blog", routes["blog"], blog.get("seo"), blog.get("title") or "", blog.get("description") or "", "/what-rising-insurance-premiums-mean-for-household-budgets/", failures),
         "category": assert_seo("category", routes["category"], category.get("seo"), f"{category.get('title')} Articles | {site_title}", category_description, "/business/", failures),
-        "user": assert_seo("user", routes["user"], user.get("seo"), f"{user.get('name')} Articles | {site_title}", user.get("bio") or f"Read the latest articles by {user.get('name')} from Starter Site.", "/author/admin/", failures),
+        "user": assert_seo("user", routes["user"], user.get("seo"), f"{user.get('name')} Articles | {site_title}", user.get("bio") or f"Read the latest articles by {user.get('name')} from Starter Site.", "/author/cheryl-nielsen/", failures),
     }
     assert_text("blog.title", routes["blog"]["html"], blog.get("title") or "", failures)
     assert_text("category.title", routes["category"]["html"], category.get("title") or "", failures)

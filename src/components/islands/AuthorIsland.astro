@@ -4,6 +4,8 @@ import { listBlogs } from '../../lib/data';
 const { user } = Astro.props;
 const slug = user?._sys?.filename || '';
 const normalize=(v:any)=>String(typeof v==='string'?v:(v?._sys?.filename||v?.name||'')).split('/').pop()?.replace(/\.(json|mdx?)$/,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const posts=(await listBlogs()).filter((post:any)=>normalize(post.author)===normalize(slug));
+const allPosts=(await listBlogs()).filter((post:any)=>normalize(post.author)===normalize(slug));
+const posts=allPosts.slice(0,6);
+const totalPages=Math.max(1,Math.ceil(allPosts.length/6));
 ---
-<DemoAuthorArchive archiveTitle={user?.name || 'Author'} author={user} posts={posts} currentPage={1} totalPages={1} basePath={`/author/${slug}`} />
+<DemoAuthorArchive archiveTitle={user?.name || 'Author'} author={user} posts={posts} currentPage={1} totalPages={totalPages} basePath={`/author/${slug}`} />

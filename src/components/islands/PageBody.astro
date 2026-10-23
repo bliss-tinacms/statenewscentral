@@ -1,10 +1,10 @@
 ---
 import DemoStaticFragment from '../state-news/DemoStaticFragment.astro';
-import EditorialPage from '../state-news/EditorialPage.astro';
+import DefaultPage from '../state-news/DefaultPage.astro';
 import SitemapPage from '../state-news/SitemapPage.astro';
 import FrontPage from '../../templates/FrontPage.astro';
 import { getConfig } from '../../lib/data';
-const { data, config = null } = Astro.props;
+const { data, config = null, posts = [], categories = [] } = Astro.props;
 const currentConfig = config || (await getConfig()).data?.config || null;
 const filename = String(data?._sys?.filename || '').toLowerCase();
 const permalink = String(data?.permalink || '').replace(/^\/+|\/+$/g,'').toLowerCase();
@@ -17,9 +17,9 @@ else if (['contact','contact-us'].includes(key)) template = 'contact';
 else if (key === 'sitemap') template = 'sitemap';
 ---
 {data && (isHome
-  ? <FrontPage data={data} editData={data} config={currentConfig} posts={[]} />
+  ? <FrontPage data={data} editData={data} config={currentConfig} posts={posts} categories={categories} />
   : template === 'sitemap'
     ? <SitemapPage data={data} />
     : template === 'page' && data?.authoritySections?.length
-      ? <EditorialPage data={data} />
+      ? <DefaultPage data={data} config={currentConfig} />
       : <DemoStaticFragment template={template} data={data} config={currentConfig} />)}

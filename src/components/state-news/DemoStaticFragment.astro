@@ -6,8 +6,9 @@ import contactHtml from '../../data/demo-html/contact.html?raw';
 import pageHtml from '../../data/demo-html/page.html?raw';
 import sitemapHtml from '../../data/demo-html/sitemap.html?raw';
 import notFoundHtml from '../../data/demo-html/404.html?raw';
+import { renderHomepageCollections } from '../../lib/state-news-demo-render';
 
-const { template = 'page', data = null, config = null } = Astro.props;
+const { template = 'page', data = null, config = null, posts = [], categories = [] } = Astro.props;
 const templates:Record<string,string> = { index:indexHtml, about:aboutHtml, team:teamHtml, contact:contactHtml, page:pageHtml, sitemap:sitemapHtml, '404':notFoundHtml };
 const selectedTemplate = data?.authorityTemplate || template;
 let html = templates[selectedTemplate] || pageHtml;
@@ -46,5 +47,6 @@ for (const item of data?.authorityLinks || []) {
   if (!item?.source || !item?.href) continue;
   html = html.split(`href="${escapeHtml(item.source)}"`).join(`href="${escapeHtml(item.href)}"`);
 }
+if (selectedTemplate === 'index') html = renderHomepageCollections(html, { posts, categories, config });
 ---
 <Fragment set:html={html} />

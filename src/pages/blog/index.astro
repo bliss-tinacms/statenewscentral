@@ -4,7 +4,7 @@ import DemoCategoryArchive from '../../components/demo/DemoCategoryArchive.astro
 import { getConfig, listBlogs } from '../../lib/data';
 
 export const prerender = false;
-const POSTS_PER_PAGE = 30;
+const POSTS_PER_PAGE = 6;
 const page = Math.max(1, Number(Astro.url.searchParams.get('page') || '1') || 1);
 const allPosts = await listBlogs();
 const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));

@@ -66,8 +66,9 @@ export const BlogCollection: Collection = {
     },
     router: ({ document }) => {
       const raw = cleanPublicSlug((document as any)?.permalink) || filenameFromDocument(document);
-      const slug = raw.startsWith("blog/") ? raw.slice(5) : raw;
-      return slug ? "/" + slug : "/blog/";
+      const normalized = slugifyFilename(raw).split("/").map((part) => part.replace(/[_.]+/g, "-")).filter(Boolean).join("/");
+      const slug = normalized.startsWith("blog/") ? normalized.slice(5) : normalized;
+      return slug ? "/" + slug + "/" : "/blog/";
     },
   },
   fields: [
@@ -76,6 +77,7 @@ export const BlogCollection: Collection = {
     { name: "permalink", label: "Permalink", type: "string", description: "Optional custom public URL path. Leave blank to use the filename/slug." },
 
     { name: "description", label: "Description", type: "string" },
+    { name: "draft", label: "Draft (hide from the public site)", type: "boolean", description: "Enable while this post is not ready to publish." },
     seoFields,
     { name: "pubDate", label: "Publication Date", type: "datetime" },
     { name: "updatedDate", label: "Updated Date", type: "datetime" },

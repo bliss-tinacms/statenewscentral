@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
 import tina from '@tinacms/astro/integration';
 import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
@@ -71,7 +70,7 @@ export default defineConfig({
 	output: 'server',
 	adapter: await getAdapter(),
 	redirects: { '/home': '/' },
-	integrations: [mdx(), sitemap(), icon(), tina()],
+	integrations: [mdx(), icon(), tina()],
 	build: {
 		// Inline the (~10 KiB) bundled CSS into a <style> in <head> instead of a
 		// separate render-blocking <link>. Astro's default ('auto') only inlines
@@ -84,7 +83,10 @@ export default defineConfig({
 		// Astro 6 responsive images: auto-emit srcset so the browser picks a
 		// variant matched to the rendered box + DPR, not the full intrinsic size.
 		layout: 'constrained',
-		remotePatterns: [{ protocol: 'https', hostname: 'assets.tina.io' }],
+		remotePatterns: [
+			{ protocol: 'https', hostname: 'assets.tina.io' },
+			{ protocol: 'https', hostname: 'res.cloudinary.com' },
+		],
 	},
 	vite: {
 		plugins: [tailwindcss(), tinaAdminDevRedirect()],

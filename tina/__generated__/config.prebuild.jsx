@@ -339,8 +339,9 @@ var BlogCollection = {
     },
     router: ({ document }) => {
       const raw = cleanPublicSlug(document?.permalink) || filenameFromDocument(document);
-      const slug = raw.startsWith("blog/") ? raw.slice(5) : raw;
-      return slug ? "/" + slug : "/blog/";
+      const normalized = slugifyFilename(raw).split("/").map((part) => part.replace(/[_.]+/g, "-")).filter(Boolean).join("/");
+      const slug = normalized.startsWith("blog/") ? normalized.slice(5) : normalized;
+      return slug ? "/" + slug + "/" : "/blog/";
     }
   },
   fields: [
@@ -348,6 +349,7 @@ var BlogCollection = {
     { type: "string", name: "title", label: "Title", isTitle: true, required: true },
     { name: "permalink", label: "Permalink", type: "string", description: "Optional custom public URL path. Leave blank to use the filename/slug." },
     { name: "description", label: "Description", type: "string" },
+    { name: "draft", label: "Draft (hide from the public site)", type: "boolean", description: "Enable while this post is not ready to publish." },
     seoFields,
     { name: "pubDate", label: "Publication Date", type: "datetime" },
     { name: "updatedDate", label: "Updated Date", type: "datetime" },
@@ -453,12 +455,8 @@ var GlobalConfigCollection = {
           type: "image",
           description: "Upload the browser tab/site icon. Recommended: square PNG, SVG, or ICO."
         },
-        {
-          name: "footerLogo",
-          label: "Footer Logo",
-          type: "image",
-          description: "Upload the logo used in the footer. Falls back to the header logo when empty."
-        }
+        { name: "footerLogo", label: "Footer Logo", type: "image", description: "Upload the logo used in the footer. Falls back to the header logo when empty." },
+        { name: "defaultSocialImage", label: "Default Social Image", type: "image", description: "Fallback Open Graph image used when a page or post does not provide one." }
       ]
     },
     {
@@ -511,6 +509,18 @@ var GlobalConfigCollection = {
             { name: "href", label: "URL", type: "string" }
           ]
         }
+      ]
+    },
+    {
+      name: "redirects",
+      label: "Redirects",
+      type: "object",
+      list: true,
+      ui: { itemProps: (item) => ({ label: `${item.from || "Source"} \u2192 ${item.to || "Destination"}` }) },
+      fields: [
+        { name: "from", label: "Source path", type: "string" },
+        { name: "to", label: "Destination path", type: "string" },
+        { name: "status", label: "Status", type: "number", description: "Use 301 for permanent or 302 for temporary." }
       ]
     },
     {
@@ -1228,9 +1238,10 @@ var PageCollection = {
       slugify: (values) => slugifyFilename2(values?.title || "untitled")
     },
     router: ({ document }) => {
-      const slug = cleanPublicSlug2(document?.permalink) || filenameFromDocument2(document);
+      const raw = cleanPublicSlug2(document?.permalink) || filenameFromDocument2(document);
+      const slug = slugifyFilename2(raw).split("/").map((part) => part.replace(/[_.]+/g, "-")).filter(Boolean).join("/");
       if (!slug || slug === "home" || slug === "index") return "/";
-      return "/" + slug;
+      return "/" + slug + "/";
     }
   },
   fields: [
@@ -1242,6 +1253,12 @@ var PageCollection = {
       isTitle: true,
       required: true,
       description: "Main visible page title shown at the top of the frontend page."
+    },
+    {
+      name: "draft",
+      label: "Draft (hide from the public site)",
+      type: "boolean",
+      description: "Enable while this page is not ready to publish."
     },
     {
       name: "permalink",
