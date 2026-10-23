@@ -122,6 +122,10 @@ export function renderArticleDemo(raw: string, options: any) {
 
   const tocItems = (post?.body?.children || []).filter((node: any) => node?.type === 'h2').map((node: any) => ({ title: textOf(node), id: slugify(textOf(node)) }));
   const article = $('[data-dc-tpl="50"]').first();
+  if (!tocItems.length) {
+    article.attr('id', 'article-content');
+    tocItems.push({ title: 'Article overview', id: 'article-content' });
+  }
   const firstParagraphStyle = $('[data-dc-tpl="70"]').attr('style') || '';
   const paragraphStyle = $('[data-dc-tpl="72"]').attr('style') || '';
   const headingStyle = $('[data-dc-tpl="71"]').attr('style') || '';
