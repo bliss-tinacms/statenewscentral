@@ -218,7 +218,9 @@ function tinaDirectContentApiUrl() {
 }
 
 function tinaApiToken() {
-	return import.meta.env.TINA_TOKEN || process.env.TINA_TOKEN || '';
+	// Server runtime secret only. Never read this via import.meta.env: Astro/Vite
+	// statically substitutes that expression and would embed the token in dist.
+	return process.env.TINA_TOKEN || '';
 }
 
 
