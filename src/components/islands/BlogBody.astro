@@ -1,7 +1,7 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
 import articleHtml from '../../data/demo-html/article.html?raw';
-import { getConfig, getUser, type CmsBlog } from '../../lib/data';
+import { getConfig, getUser, listBlogs, type CmsBlog } from '../../lib/data';
 import { renderArticleDemo } from '../../lib/state-news-demo-render';
 
 interface Props {
@@ -21,11 +21,23 @@ const authorSlug = typeof authorReference === 'string'
 const author = typeof authorReference === 'object' && authorReference?.name
   ? authorReference
   : authorSlug ? (await getUser(authorSlug)).data?.user ?? null : null;
+const categoryKey = (value: any) => String(typeof value === 'string' ? value : value?.category || value?._sys?.filename || value?.title || '')
+  .split('/').pop()?.replace(/\.(json|mdx?)$/i, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const currentCategoryKeys = categories.map(categoryKey).filter(Boolean);
+const resolvedRelatedPosts = Array.isArray(relatedPosts) && relatedPosts.length
+  ? relatedPosts
+  : (await listBlogs())
+      .filter((post: any) => post?._sys?.filename !== data?._sys?.filename)
+      .filter((post: any) => {
+        const refs = Array.isArray(post?.categories) ? post.categories : post?.category ? [post.category] : [];
+        return refs.some((ref: any) => currentCategoryKeys.includes(categoryKey(ref)));
+      })
+      .slice(0, 3);
 const html = data ? renderArticleDemo(articleHtml, {
   post: data,
   author,
   categories,
-  relatedPosts,
+  relatedPosts: resolvedRelatedPosts,
   config,
   fields: {
     title: tinaField(data as any, 'title'),

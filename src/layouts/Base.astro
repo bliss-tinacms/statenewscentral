@@ -26,7 +26,7 @@ const headerCode = config?.codeInjection?.headerCode?.trim() || '';
 const footerCode = config?.codeInjection?.footerCode?.trim() || '';
 const favicon = config?.seo?.favicon || config?.favicon || '/favicon.svg';
 const defaultSocialImage = config?.seo?.defaultSocialImage || undefined;
-const copyright = config?.footer?.copyrightText || `© ${new Date().getFullYear()} ${config?.seo?.title || 'State News Digest'}. All rights reserved.`;
+const copyright = config?.footer?.copyrightText || `© ${new Date().getFullYear()} ${config?.seo?.title || 'State News Central'}. All rights reserved.`;
 ---
 <!doctype html>
 <html lang="en">
@@ -60,7 +60,7 @@ const copyright = config?.footer?.copyrightText || `© ${new Date().getFullYear(
       </div>
       <div class="snd-footer__bottom">
         <span>{copyright}</span>
-        <TinaIsland name="footer-navigation" wrapper={islands['footer-navigation'].wrapper} params={{ slug: 'footer-legal' }}>
+        <TinaIsland name="footer-legal-navigation" wrapper={islands['footer-legal-navigation'].wrapper} params={{ slug: 'footer-legal' }}>
           <FooterNavigation legal navigation={legalNavigation} />
         </TinaIsland>
       </div>

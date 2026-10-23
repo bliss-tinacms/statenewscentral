@@ -574,8 +574,6 @@ async function getLiveUser(slug: string) {
 
 export const getEditableUser = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
-	const generated = await requestWithMetadata(client.queries.user({ relativePath }), { priority: 'primary' });
-	if (generated?.data?.user) return generated;
 	const live = await fetchLiveTinaResult<{ user: any }>(UserDocument, { relativePath });
 	if (live?.data?.user) {
 		return requestWithMetadata(Promise.resolve({
@@ -584,6 +582,8 @@ export const getEditableUser = async (slug: string) => {
 			variables: { relativePath },
 		}), { priority: 'primary' });
 	}
+	const generated = await requestWithMetadata(client.queries.user({ relativePath }), { priority: 'primary' });
+	if (generated?.data?.user) return generated;
 	const localUser = readLocalJson('user', relativePath);
 	if (localUser) {
 		return requestWithMetadata(Promise.resolve({
@@ -599,8 +599,6 @@ export const getUser = (slug: string) => getLiveUser(slug);
 
 export const getEditableCategory = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
-	const generated = await requestWithMetadata(client.queries.category({ relativePath }), { priority: 'primary' });
-	if (generated?.data?.category) return generated;
 	const live = await fetchLiveTinaResult<{ category: any }>(CategoryDocument, { relativePath });
 	if (live?.data?.category) {
 		return requestWithMetadata(Promise.resolve({
@@ -609,6 +607,8 @@ export const getEditableCategory = async (slug: string) => {
 			variables: { relativePath },
 		}), { priority: 'primary' });
 	}
+	const generated = await requestWithMetadata(client.queries.category({ relativePath }), { priority: 'primary' });
+	if (generated?.data?.category) return generated;
 	const localCategory = readLocalJson('category', relativePath);
 	if (localCategory) {
 		return requestWithMetadata(Promise.resolve({

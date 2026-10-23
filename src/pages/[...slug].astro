@@ -118,8 +118,8 @@ if (matchedPage) {
     const seo = data.seo ?? null;
     view = 'page';
     pageData = data;
-    pageTitle = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'State News Digest';
-    pageDescription = seo?.metaDescription || config?.seo?.description || 'Independent reporting and analysis from State News Digest.';
+    pageTitle = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'State News Central';
+    pageDescription = seo?.metaDescription || config?.seo?.description || 'News with context about the communities and places behind the story.';
   }
 }
 
@@ -149,8 +149,8 @@ if (view === 'not-found') {
         basePath: '/' + parsed.slug,
         hasPosts: posts.length > 0,
         seo: categorySeo,
-        seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest'),
-        description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Digest.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Digest.'),
+        seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central'),
+        description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Central.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Central.'),
       };
     }
   }
@@ -195,7 +195,7 @@ if (view === 'not-found') {
 
 if (view === 'not-found') {
   Astro.response.status = 404;
-  pageTitle = `404 | Page Not Found | ${config?.seo?.title || 'State News Digest'}`;
+  pageTitle = `404 | Page Not Found | ${config?.seo?.title || 'State News Central'}`;
   pageDescription = config?.notFound?.description || 'The page you are looking for may have moved, been removed, or never existed.';
 }
 ---
@@ -234,7 +234,7 @@ if (view === 'not-found') {
     noindex={categoryContext.seo?.noindex || false}
     nofollow={categoryContext.seo?.nofollow || false}
   >
-    <TinaIsland name="category" wrapper={islands.category.wrapper} params={{ slug: categoryContext.categoryDocumentSlug }} primary>
+    <TinaIsland name="category" wrapper={islands.category.wrapper} params={{ slug: categoryContext.categoryDocumentSlug, page: String(categoryContext.currentPage) }} primary>
       <DemoCategoryArchive archiveTitle={categoryContext.archiveTitle} posts={categoryContext.posts} currentPage={categoryContext.currentPage} totalPages={categoryContext.totalPages} basePath={categoryContext.basePath} category={categoryContext.categoryFromPosts} />
     </TinaIsland>
   </Base>

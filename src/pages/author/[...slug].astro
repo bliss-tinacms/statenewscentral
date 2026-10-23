@@ -64,12 +64,12 @@ const authorObject = allPosts.find((post) => post.author && typeof post.author =
 const archiveTitle = editableAuthor?.name || labelFromReference(authorObject) || Astro.props.archiveTitle || 'Author';
 const authorSeo = (editableAuthor as any)?.seo || (authorObject as any)?.seo || null;
 const basePath = '/author/' + parsed.slug;
-const seoTitle = authorSeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest');
-const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from State News Digest.';
+const seoTitle = authorSeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central');
+const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from State News Central.';
 ---
 
 {notFound ? (
-	<Base title={`404 | Page Not Found | ${config?.seo?.title || 'State News Digest'}`} description="The requested author archive could not be found." noindex={true}>
+	<Base title={`404 | Page Not Found | ${config?.seo?.title || 'State News Central'}`} description="The requested author archive could not be found." noindex={true}>
 		<Demo404 posts={allPublishedPosts.slice(0, 3)} categories={notFoundCategories} config={config} />
 	</Base>
 ) : (
@@ -83,7 +83,7 @@ const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read t
 		noindex={authorSeo?.noindex || false}
 		nofollow={authorSeo?.nofollow || false}
 	>
-		<TinaIsland name="author" wrapper={islands.author.wrapper} params={{ slug: parsed.slug }} primary>
+		<TinaIsland name="author" wrapper={islands.author.wrapper} params={{ slug: parsed.slug, page: String(currentPage) }} primary>
 			<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
 		</TinaIsland>
 	</Base>

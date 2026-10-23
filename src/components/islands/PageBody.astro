@@ -3,9 +3,12 @@ import DemoStaticFragment from '../state-news/DemoStaticFragment.astro';
 import DefaultPage from '../state-news/DefaultPage.astro';
 import SitemapPage from '../state-news/SitemapPage.astro';
 import FrontPage from '../../templates/FrontPage.astro';
-import { getConfig } from '../../lib/data';
+import { getConfig, listBlogs, listCategories } from '../../lib/data';
 const { data, config = null, posts = [], categories = [] } = Astro.props;
 const currentConfig = config || (await getConfig()).data?.config || null;
+// Refresh requests carry the Page document but not homepage dependencies.
+const currentPosts = Array.isArray(posts) && posts.length ? posts : await listBlogs();
+const currentCategories = Array.isArray(categories) && categories.length ? categories : await listCategories();
 const filename = String(data?._sys?.filename || '').toLowerCase();
 const permalink = String(data?.permalink || '').replace(/^\/+|\/+$/g,'').toLowerCase();
 const key = filename || permalink;
@@ -17,7 +20,7 @@ else if (['contact','contact-us'].includes(key)) template = 'contact';
 else if (key === 'sitemap') template = 'sitemap';
 ---
 {data && (isHome
-  ? <FrontPage data={data} editData={data} config={currentConfig} posts={posts} categories={categories} />
+  ? <FrontPage data={data} editData={data} config={currentConfig} posts={currentPosts} categories={currentCategories} />
   : template === 'sitemap'
     ? <SitemapPage data={data} />
     : template === 'page' && data?.authoritySections?.length

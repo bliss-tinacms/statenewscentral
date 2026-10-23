@@ -1,11 +1,12 @@
 ---
 import DemoAuthorArchive from '../demo/DemoAuthorArchive.astro';
 import { listBlogs } from '../../lib/data';
-const { user } = Astro.props;
+const { user, page: requestedPage = 1 } = Astro.props;
 const slug = user?._sys?.filename || '';
+const page = Math.max(1, Number(requestedPage) || 1);
 const normalize=(v:any)=>String(typeof v==='string'?v:(v?._sys?.filename||v?.name||'')).split('/').pop()?.replace(/\.(json|mdx?)$/,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const allPosts=(await listBlogs()).filter((post:any)=>normalize(post.author)===normalize(slug));
-const posts=allPosts.slice(0,6);
+const posts=allPosts.slice((page-1)*6,page*6);
 const totalPages=Math.max(1,Math.ceil(allPosts.length/6));
 ---
-<DemoAuthorArchive archiveTitle={user?.name || 'Author'} author={user} posts={posts} currentPage={1} totalPages={totalPages} basePath={`/author/${slug}`} />
+<DemoAuthorArchive archiveTitle={user?.name || 'Author'} author={user} posts={posts} currentPage={page} totalPages={totalPages} basePath={`/author/${slug}`} />

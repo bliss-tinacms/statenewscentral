@@ -1,212 +1,253 @@
 {
-  "logo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
-  "cloudinary": {
-    "024a761153188baab63b6edbe3c208c352b982a9dab5df84c3ce23c3f944b1b8.jpg": {
-      "public_id": "statenewscentral/024a761153188baa",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703204/statenewscentral/024a761153188baa.jpg",
-      "bytes": 150310,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
-    },
+  "assets": {
     "0e1f6cfbff381f2edc3ed55cdf046a351fdcd1aa8aa3f5efba2b1b0d256ec1c2.jpg": {
-      "public_id": "statenewscentral/0e1f6cfbff381f2e",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703206/statenewscentral/0e1f6cfbff381f2e.jpg",
       "bytes": 547084,
-      "width": 1600,
-      "height": 1200,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782063/statenewscentral/demo-v2/0e1f6cfbff381f2edc3ed55cdf046a351fdcd1aa8aa3f5efba2b1b0d256ec1c2.jpg",
+      "mime": "image/jpeg",
+      "sha256": "0e1f6cfbff381f2edc3ed55cdf046a351fdcd1aa8aa3f5efba2b1b0d256ec1c2"
     },
     "1021ed0c553a6ab34f4e80aa9de7453181d008ecc3540e883b0d74b40f3e6095.jpg": {
-      "public_id": "statenewscentral/1021ed0c553a6ab3",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703208/statenewscentral/1021ed0c553a6ab3.jpg",
       "bytes": 113992,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782064/statenewscentral/demo-v2/1021ed0c553a6ab34f4e80aa9de7453181d008ecc3540e883b0d74b40f3e6095.jpg",
+      "mime": "image/jpeg",
+      "sha256": "1021ed0c553a6ab34f4e80aa9de7453181d008ecc3540e883b0d74b40f3e6095"
     },
-    "1953a4110f7b7d4d87a51103c08f7b3992eb75ce4dea85bd46fc4c927c4b62d5.jpg": {
-      "public_id": "statenewscentral/1953a4110f7b7d4d",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703209/statenewscentral/1953a4110f7b7d4d.jpg",
-      "bytes": 141523,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
+    "138a031196474b53b6526d0f9528d6a9749d0c3def008a53f185f44b4479517c.jpg": {
+      "bytes": 142898,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782066/statenewscentral/demo-v2/138a031196474b53b6526d0f9528d6a9749d0c3def008a53f185f44b4479517c.jpg",
+      "mime": "image/jpeg",
+      "sha256": "138a031196474b53b6526d0f9528d6a9749d0c3def008a53f185f44b4479517c"
     },
-    "1b7b1ec70361c2ee329799c5bde94eaef80e0c64521a33eb0b229119a1ac3caf.jpg": {
-      "public_id": "statenewscentral/1b7b1ec70361c2ee",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703211/statenewscentral/1b7b1ec70361c2ee.jpg",
-      "bytes": 243139,
-      "width": 1600,
-      "height": 1068,
-      "format": "jpg",
-      "verified_status": 200
+    "13999b19e20cfba7de70d4b739e1900c1a2e015a78c9a300241a3e14dc03e905.jpg": {
+      "bytes": 160978,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782067/statenewscentral/demo-v2/13999b19e20cfba7de70d4b739e1900c1a2e015a78c9a300241a3e14dc03e905.jpg",
+      "mime": "image/jpeg",
+      "sha256": "13999b19e20cfba7de70d4b739e1900c1a2e015a78c9a300241a3e14dc03e905"
+    },
+    "13b3f1389f7634ede3e131e03f1e95ff3bec79346eda4addd03bfad34d029184.jpg": {
+      "bytes": 504917,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782068/statenewscentral/demo-v2/13b3f1389f7634ede3e131e03f1e95ff3bec79346eda4addd03bfad34d029184.jpg",
+      "mime": "image/jpeg",
+      "sha256": "13b3f1389f7634ede3e131e03f1e95ff3bec79346eda4addd03bfad34d029184"
     },
     "2896a40d937a6f8f3bc985b7ae6c70a571909b63029b3eec87eb34afea4fc206.jpg": {
-      "public_id": "statenewscentral/2896a40d937a6f8f",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703212/statenewscentral/2896a40d937a6f8f.jpg",
       "bytes": 148306,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782070/statenewscentral/demo-v2/2896a40d937a6f8f3bc985b7ae6c70a571909b63029b3eec87eb34afea4fc206.jpg",
+      "mime": "image/jpeg",
+      "sha256": "2896a40d937a6f8f3bc985b7ae6c70a571909b63029b3eec87eb34afea4fc206"
+    },
+    "2b78b59975cac8e0be7119ee9c3df62e13b3458c27bddd117b72bda95d669e34.jpg": {
+      "bytes": 144045,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782072/statenewscentral/demo-v2/2b78b59975cac8e0be7119ee9c3df62e13b3458c27bddd117b72bda95d669e34.jpg",
+      "mime": "image/jpeg",
+      "sha256": "2b78b59975cac8e0be7119ee9c3df62e13b3458c27bddd117b72bda95d669e34"
     },
     "32e92981e3c392215adaaa20f60369739aa6a847a843aa9b7350e899cdd57e4f.jpg": {
-      "public_id": "statenewscentral/32e92981e3c39221",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703214/statenewscentral/32e92981e3c39221.jpg",
       "bytes": 131118,
-      "width": 1600,
-      "height": 1060,
-      "format": "jpg",
-      "verified_status": 200
-    },
-    "429c8301d762a8fcf025a7abb873559832434cc79dfc086b555727a496b4d849.jpg": {
-      "public_id": "statenewscentral/429c8301d762a8fc",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703216/statenewscentral/429c8301d762a8fc.jpg",
-      "bytes": 136132,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782073/statenewscentral/demo-v2/32e92981e3c392215adaaa20f60369739aa6a847a843aa9b7350e899cdd57e4f.jpg",
+      "mime": "image/jpeg",
+      "sha256": "32e92981e3c392215adaaa20f60369739aa6a847a843aa9b7350e899cdd57e4f"
     },
     "43096f30cd931a27e613a7e9480c08231731f4213d567103ab518525d2c68872.jpg": {
-      "public_id": "statenewscentral/43096f30cd931a27",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703218/statenewscentral/43096f30cd931a27.jpg",
       "bytes": 300600,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782074/statenewscentral/demo-v2/43096f30cd931a27e613a7e9480c08231731f4213d567103ab518525d2c68872.jpg",
+      "mime": "image/jpeg",
+      "sha256": "43096f30cd931a27e613a7e9480c08231731f4213d567103ab518525d2c68872"
     },
-    "44da00282fd292d578068d7286073aa6b80e951f1a1af805260a56b565c7d2c1.jpg": {
-      "public_id": "statenewscentral/44da00282fd292d5",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703219/statenewscentral/44da00282fd292d5.jpg",
-      "bytes": 59315,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
+    "464064e226c64e9ea36c5efdb65bb44ce2485a4e11165e0cd58c7cf33d0a6fef.jpg": {
+      "bytes": 694860,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782076/statenewscentral/demo-v2/464064e226c64e9ea36c5efdb65bb44ce2485a4e11165e0cd58c7cf33d0a6fef.jpg",
+      "mime": "image/jpeg",
+      "sha256": "464064e226c64e9ea36c5efdb65bb44ce2485a4e11165e0cd58c7cf33d0a6fef"
     },
-    "46ce88deceedeaf9c0f3aa7418fe748cd721b25be4d42709bd711dd2aabd854f.jpg": {
-      "public_id": "statenewscentral/46ce88deceedeaf9",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703220/statenewscentral/46ce88deceedeaf9.jpg",
-      "bytes": 340315,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+    "544224dfef3051f4b3c18af85cfb5c177837bfc4dc511b69e4c46f58f34d2c8a.jpg": {
+      "bytes": 316310,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782077/statenewscentral/demo-v2/544224dfef3051f4b3c18af85cfb5c177837bfc4dc511b69e4c46f58f34d2c8a.jpg",
+      "mime": "image/jpeg",
+      "sha256": "544224dfef3051f4b3c18af85cfb5c177837bfc4dc511b69e4c46f58f34d2c8a"
+    },
+    "5e788ad316ee51b75b8bab1b9cc5b6bc9c98ff21338bc91f1fcf52b0f497436a.jpg": {
+      "bytes": 473502,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782078/statenewscentral/demo-v2/5e788ad316ee51b75b8bab1b9cc5b6bc9c98ff21338bc91f1fcf52b0f497436a.jpg",
+      "mime": "image/jpeg",
+      "sha256": "5e788ad316ee51b75b8bab1b9cc5b6bc9c98ff21338bc91f1fcf52b0f497436a"
+    },
+    "5e9e51723766c1cc1a4f283457211144a15a98f49dcd13e518d453ba04cc6d8b.jpg": {
+      "bytes": 354274,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782079/statenewscentral/demo-v2/5e9e51723766c1cc1a4f283457211144a15a98f49dcd13e518d453ba04cc6d8b.jpg",
+      "mime": "image/jpeg",
+      "sha256": "5e9e51723766c1cc1a4f283457211144a15a98f49dcd13e518d453ba04cc6d8b"
+    },
+    "5f20c2cbfc5fc3567ff6701505e6627a8af8c2981aaa1b66edd5220181381843.jpg": {
+      "bytes": 279270,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782081/statenewscentral/demo-v2/5f20c2cbfc5fc3567ff6701505e6627a8af8c2981aaa1b66edd5220181381843.jpg",
+      "mime": "image/jpeg",
+      "sha256": "5f20c2cbfc5fc3567ff6701505e6627a8af8c2981aaa1b66edd5220181381843"
     },
     "63ab94fde6773f2e41b8cc66e3b2399acd4a2891d0bc33139671cefa4f117b8b.jpg": {
-      "public_id": "statenewscentral/63ab94fde6773f2e",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703222/statenewscentral/63ab94fde6773f2e.jpg",
       "bytes": 479841,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782082/statenewscentral/demo-v2/63ab94fde6773f2e41b8cc66e3b2399acd4a2891d0bc33139671cefa4f117b8b.jpg",
+      "mime": "image/jpeg",
+      "sha256": "63ab94fde6773f2e41b8cc66e3b2399acd4a2891d0bc33139671cefa4f117b8b"
     },
-    "6559602d9c36691f0c5d51fc2709c9a733f70a943ec2e8ec0cd76146e287d130.jpg": {
-      "public_id": "statenewscentral/6559602d9c36691f",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703223/statenewscentral/6559602d9c36691f.jpg",
-      "bytes": 115990,
-      "width": 1132,
-      "height": 941,
-      "format": "jpg",
-      "verified_status": 200
+    "6ad5b786da3fabe1e90ca29bb2c50d78e5b6e606e00bc9af86edf6dc56a30807.jpg": {
+      "bytes": 133708,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782083/statenewscentral/demo-v2/6ad5b786da3fabe1e90ca29bb2c50d78e5b6e606e00bc9af86edf6dc56a30807.jpg",
+      "mime": "image/jpeg",
+      "sha256": "6ad5b786da3fabe1e90ca29bb2c50d78e5b6e606e00bc9af86edf6dc56a30807"
     },
-    "6a222d53983c5671aee1f3db2bf481263984fd62349d68ecd6dcf521da6bd72f.jpg": {
-      "public_id": "statenewscentral/6a222d53983c5671",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703225/statenewscentral/6a222d53983c5671.jpg",
-      "bytes": 57058,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
+    "6b8fbd5fbe085e433131657a8aee0aac8f3e39d581168367b1afbd8f6ee7d0ad.jpg": {
+      "bytes": 199998,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782084/statenewscentral/demo-v2/6b8fbd5fbe085e433131657a8aee0aac8f3e39d581168367b1afbd8f6ee7d0ad.jpg",
+      "mime": "image/jpeg",
+      "sha256": "6b8fbd5fbe085e433131657a8aee0aac8f3e39d581168367b1afbd8f6ee7d0ad"
     },
-    "6e395754457953df7e9361799b18a6a68b4099ebc49df5b121d61df740e8fb85.jpg": {
-      "public_id": "statenewscentral/6e395754457953df",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703226/statenewscentral/6e395754457953df.jpg",
-      "bytes": 445828,
-      "width": 1600,
-      "height": 1067,
-      "format": "jpg",
-      "verified_status": 200
+    "6ce1f464be3b7f99db1e101a282403c80186b5f38c49d4b5eff8d661f0205531.jpg": {
+      "bytes": 135250,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782085/statenewscentral/demo-v2/6ce1f464be3b7f99db1e101a282403c80186b5f38c49d4b5eff8d661f0205531.jpg",
+      "mime": "image/jpeg",
+      "sha256": "6ce1f464be3b7f99db1e101a282403c80186b5f38c49d4b5eff8d661f0205531"
     },
-    "7d4f84f9c2c33d9bc6648525d8fed89a8eaa750f293b87e8e69dece0345d0bbc.jpg": {
-      "public_id": "statenewscentral/7d4f84f9c2c33d9b",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703228/statenewscentral/7d4f84f9c2c33d9b.jpg",
-      "bytes": 213624,
-      "width": 1600,
-      "height": 1063,
-      "format": "jpg",
-      "verified_status": 200
+    "84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png": {
+      "bytes": 58593,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782087/statenewscentral/demo-v2/84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png",
+      "mime": "image/png",
+      "sha256": "84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc"
     },
     "86e6a7e6e6537a48e3f4afb6a5d52b5bf3ffac4475a98c98fa206c4d52f5a73d.jpg": {
-      "public_id": "statenewscentral/86e6a7e6e6537a48",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703229/statenewscentral/86e6a7e6e6537a48.jpg",
       "bytes": 582845,
-      "width": 1600,
-      "height": 1200,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782089/statenewscentral/demo-v2/86e6a7e6e6537a48e3f4afb6a5d52b5bf3ffac4475a98c98fa206c4d52f5a73d.jpg",
+      "mime": "image/jpeg",
+      "sha256": "86e6a7e6e6537a48e3f4afb6a5d52b5bf3ffac4475a98c98fa206c4d52f5a73d"
     },
-    "91d70668d274e9c28f6416611d27881862baaeb2ea90d59ca02c9e6a626dcd52.jpg": {
-      "public_id": "statenewscentral/91d70668d274e9c2",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703231/statenewscentral/91d70668d274e9c2.jpg",
-      "bytes": 547447,
-      "width": 1600,
-      "height": 1200,
-      "format": "jpg",
-      "verified_status": 200
+    "a68fab85f5d7bc5dca3ada2c1a1dc12d9545579ec47117c7383f920d0ff4d8c7.jpg": {
+      "bytes": 147754,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782090/statenewscentral/demo-v2/a68fab85f5d7bc5dca3ada2c1a1dc12d9545579ec47117c7383f920d0ff4d8c7.jpg",
+      "mime": "image/jpeg",
+      "sha256": "a68fab85f5d7bc5dca3ada2c1a1dc12d9545579ec47117c7383f920d0ff4d8c7"
     },
-    "be02edb72eb4175025a505fce31fe37c010c0fb30a57c1cdabde2274cf56c534.jpg": {
-      "public_id": "statenewscentral/be02edb72eb41750",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703232/statenewscentral/be02edb72eb41750.jpg",
-      "bytes": 314919,
-      "width": 1672,
-      "height": 941,
-      "format": "jpg",
-      "verified_status": 200
+    "a88846a7d751390cbac315161f0ca491ba3876e919e541c389821c1bb46025b7.jpg": {
+      "bytes": 176869,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782091/statenewscentral/demo-v2/a88846a7d751390cbac315161f0ca491ba3876e919e541c389821c1bb46025b7.jpg",
+      "mime": "image/jpeg",
+      "sha256": "a88846a7d751390cbac315161f0ca491ba3876e919e541c389821c1bb46025b7"
+    },
+    "ba8c0891fbeb359a9b9e053cf855a3d9ebf70c7d03e39a6859c3bbf2fb2d6137.jpg": {
+      "bytes": 146491,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782092/statenewscentral/demo-v2/ba8c0891fbeb359a9b9e053cf855a3d9ebf70c7d03e39a6859c3bbf2fb2d6137.jpg",
+      "mime": "image/jpeg",
+      "sha256": "ba8c0891fbeb359a9b9e053cf855a3d9ebf70c7d03e39a6859c3bbf2fb2d6137"
+    },
+    "bb03cbb7d950fc20cdad7da6074ebfabaefce66bab7a97af9257f19bf0bd66c6.jpg": {
+      "bytes": 350978,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782093/statenewscentral/demo-v2/bb03cbb7d950fc20cdad7da6074ebfabaefce66bab7a97af9257f19bf0bd66c6.jpg",
+      "mime": "image/jpeg",
+      "sha256": "bb03cbb7d950fc20cdad7da6074ebfabaefce66bab7a97af9257f19bf0bd66c6"
     },
     "bed20a9103edad6a12525f9822053afa6f6e5262ee7d6bf100cdd76a7f035186.jpg": {
-      "public_id": "statenewscentral/bed20a9103edad6a",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703234/statenewscentral/bed20a9103edad6a.jpg",
       "bytes": 579603,
-      "width": 1600,
-      "height": 1200,
-      "format": "jpg",
-      "verified_status": 200
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782095/statenewscentral/demo-v2/bed20a9103edad6a12525f9822053afa6f6e5262ee7d6bf100cdd76a7f035186.jpg",
+      "mime": "image/jpeg",
+      "sha256": "bed20a9103edad6a12525f9822053afa6f6e5262ee7d6bf100cdd76a7f035186"
     },
-    "ce9bb2415a7832722aacb83609175e88858ce82fe173610b17510ac47e0b6a36.png": {
-      "public_id": "statenewscentral/ce9bb2415a783272",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
-      "bytes": 36282,
-      "width": 350,
-      "height": 83,
-      "format": "png",
-      "verified_status": 200
+    "cafdbbbdee551fe1a359bca4e4b76f4aac0c451a6a647de152ac36431ea93711.jpg": {
+      "bytes": 140205,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782096/statenewscentral/demo-v2/cafdbbbdee551fe1a359bca4e4b76f4aac0c451a6a647de152ac36431ea93711.jpg",
+      "mime": "image/jpeg",
+      "sha256": "cafdbbbdee551fe1a359bca4e4b76f4aac0c451a6a647de152ac36431ea93711"
     },
-    "db9d6eb3681770af7e02ed8df7d7472b479219d0bb963037e6abbbd82c2375bd.jpg": {
-      "public_id": "statenewscentral/db9d6eb3681770af",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703237/statenewscentral/db9d6eb3681770af.jpg",
-      "bytes": 379970,
-      "width": 1600,
-      "height": 1201,
-      "format": "jpg",
-      "verified_status": 200
+    "d5e65cc153940350ddb1f835379895f165395f7a9178b41f80ce06497817bfb7.jpg": {
+      "bytes": 137270,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782098/statenewscentral/demo-v2/d5e65cc153940350ddb1f835379895f165395f7a9178b41f80ce06497817bfb7.jpg",
+      "mime": "image/jpeg",
+      "sha256": "d5e65cc153940350ddb1f835379895f165395f7a9178b41f80ce06497817bfb7"
     },
-    "e866f15c929df27dd1b7c370f572c1f3e8ebe6db64a53ca38f4639226ff7cfe2.jpg": {
-      "public_id": "statenewscentral/e866f15c929df27d",
-      "secure_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703238/statenewscentral/e866f15c929df27d.jpg",
-      "bytes": 61085,
-      "width": 512,
-      "height": 512,
-      "format": "jpg",
-      "verified_status": 200
+    "e75e7cc20a62e2a10e07b7d9949de9faa485803e95dc84169711e5fbae299366.jpg": {
+      "bytes": 212500,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782099/statenewscentral/demo-v2/e75e7cc20a62e2a10e07b7d9949de9faa485803e95dc84169711e5fbae299366.jpg",
+      "mime": "image/jpeg",
+      "sha256": "e75e7cc20a62e2a10e07b7d9949de9faa485803e95dc84169711e5fbae299366"
+    },
+    "e82d280b2fe7db469b78545a45a4bad8979d466c62a882e630889545eade1744.jpg": {
+      "bytes": 311638,
+      "cloudinary_url": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782100/statenewscentral/demo-v2/e82d280b2fe7db469b78545a45a4bad8979d466c62a882e630889545eade1744.jpg",
+      "mime": "image/jpeg",
+      "sha256": "e82d280b2fe7db469b78545a45a4bad8979d466c62a882e630889545eade1744"
     }
-  }
+  },
+  "authority": "user-supplied bundled HTML templates 2026-10-23",
+  "logo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782087/statenewscentral/demo-v2/84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png",
+  "templates": {
+    "404": {
+      "asset_occurrences": 1,
+      "fragment_bytes": 4708,
+      "fragment_sha256": "773eaecb625922e9ae00635f5e7b9fda4b2ce33b6df3e3d03e880d3cc2876fee",
+      "source_file": "doc_a6f92e24ce55_404.html",
+      "source_sha256": "26258bf17094ce7b5d157ccd1ea5ddcb8dd85893927ff6046cde7197d0911f6d"
+    },
+    "about": {
+      "asset_occurrences": 9,
+      "fragment_bytes": 20910,
+      "fragment_sha256": "a061d50070da043cf0a4754dacf5691e820c5a7f66ecc398031f88066de5ec2e",
+      "source_file": "doc_e66f8066169f_about.html",
+      "source_sha256": "044d8768fbdf9e598024730bd5ad89011733005c51cb2e3ae10cd7603eead8cd"
+    },
+    "article": {
+      "asset_occurrences": 7,
+      "fragment_bytes": 17270,
+      "fragment_sha256": "6fca4c4883aa1fd73ad31868afe4dc0aa4643cccb33131b1a940623924bfded0",
+      "source_file": "doc_dd80b5b626f8_article.html",
+      "source_sha256": "c4959dc0d10ebd62acd9a0484e10760064257c161d143774e0cad5bfc428b921"
+    },
+    "author": {
+      "asset_occurrences": 8,
+      "fragment_bytes": 11188,
+      "fragment_sha256": "199fe20eafa7d0fa5630149b72b8628843163949166102f5e66d39db89619424",
+      "source_file": "doc_f0d86f621ec1_author.html",
+      "source_sha256": "8e8ef5edb33c95edb0e191cd828c83b3d24892d52965262c31e90b57a9b020af"
+    },
+    "category": {
+      "asset_occurrences": 15,
+      "fragment_bytes": 14010,
+      "fragment_sha256": "26893f8f14508ed28b83d0367c19bd9ed8f45171a543ca2098eebddf31038922",
+      "source_file": "doc_11ace701bed7_category.html",
+      "source_sha256": "b4da546c38e803c02d83a83fd714166d58631f5c4985b38e7f7a25ec469e82c2"
+    },
+    "contact": {
+      "asset_occurrences": 1,
+      "fragment_bytes": 14284,
+      "fragment_sha256": "0206ac6b651dcca5febea2da6a0aebf2742fb9e99d1aa50facf5624fe3d4fbc7",
+      "source_file": "doc_c734ca40cb93_contact.html",
+      "source_sha256": "ef9c670a779baad23a45a063cf195b7d3adab8c71a3e4f0c13c5f3f0b7faddcc"
+    },
+    "index": {
+      "asset_occurrences": 20,
+      "fragment_bytes": 31937,
+      "fragment_sha256": "93bf40d4c5630b513c6f35c2c0824039e7f97cedccb7703a42b2c60b8ea123b0",
+      "source_file": "doc_be7344bef4d7_index.html",
+      "source_sha256": "2c40f88544a4f64a5862c707a830290c0d98932dc633639baecf0d52572a4d4b"
+    },
+    "page": {
+      "asset_occurrences": 1,
+      "fragment_bytes": 9368,
+      "fragment_sha256": "8eee66ec97e206d0fa27b7c8b2085053324d5b79ad93705b864df503ce87f7b3",
+      "source_file": "doc_5eba87d08c56_page.html",
+      "source_sha256": "62cf5ccddb6bb767a6eca8389423d798a7810f0bb14762aba4b5b75026db9055"
+    },
+    "sitemap": {
+      "asset_occurrences": 1,
+      "fragment_bytes": 7194,
+      "fragment_sha256": "bed2d620fdb6a21b3907132ec7c3f9ffe1e122039520d9c6cc956d073d83f3c7",
+      "source_file": "doc_74a289a97b83_sitemap.html",
+      "source_sha256": "2bec5ddc03d77f235e4f13071eee3cac231804bb4246ad4df22c4dea02a1542b"
+    },
+    "team": {
+      "asset_occurrences": 7,
+      "fragment_bytes": 16131,
+      "fragment_sha256": "d5c6dc275617c6f3341bdca5a6f577628d3dfd0cb084c1cac5130c70ba86496b",
+      "source_file": "doc_dad00df7f8ba_team.html",
+      "source_sha256": "4f467f7af194441a975d00f59ea2fb73131283aabb654879886aedd4d8d6b325"
+    }
+  },
+  "version": 2
 }

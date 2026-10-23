@@ -10,11 +10,11 @@ const port = Number(process.env.DEMO_LOCK_PORT || 4397);
 const origin = `http://127.0.0.1:${port}`;
 const mutation = process.env.DEMO_LOCK_MUTATION || '';
 const routes = [
-  { path: '/', status: 200, family: 'index', text: 'A clearer view of the news.' },
-  { path: '/about/', status: 200, family: 'about', text: 'About State News Digest' },
-  { path: '/our-team/', status: 200, family: 'team', text: 'Our team' },
+  { path: '/', status: 200, family: 'index', text: 'Where a story happens is where understanding begins.' },
+  { path: '/about/', status: 200, family: 'about', text: 'About State News Central' },
+  { path: '/our-team/', status: 200, family: 'team', text: 'The State News Central newsroom' },
   { path: '/editorial-guidelines/', status: 200, family: 'page', text: 'Editorial Guidelines' },
-  { path: '/contact/', status: 200, family: 'contact', text: 'Contact us' },
+  { path: '/contact/', status: 200, family: 'contact', text: 'Get in touch with State News Central' },
   { path: '/business/', status: 200, family: 'category', text: 'Business' },
   { path: '/author/cheryl-nielsen/', status: 200, family: 'author', text: 'Cheryl Nielsen' },
   { path: '/what-rising-insurance-premiums-mean-for-household-budgets/', status: 200, family: 'article', text: 'What rising insurance premiums mean for household budgets' },
@@ -66,15 +66,15 @@ async function assertRoutes() {
     const authority = await readFile(resolve(root, `tests/fixtures/astro-demo-lock/authoritative/${route.family}.html`), 'utf8');
     const expectedStructure = templateSignature(authority);
     const currentStructure = templateSignature(html);
-    if (mutation === 'dom-structure' && route.family === 'page') currentStructure.splice(currentStructure.findIndex((entry) => entry.startsWith('39:')), 1);
+    if (mutation === 'dom-structure' && route.family === 'page') currentStructure.splice(currentStructure.findIndex((entry) => entry.startsWith('44:')), 1);
     const expectedSet = new Set(expectedStructure);
     const unexpected = currentStructure.filter((entry) => !expectedSet.has(entry));
     const requiredMarkers = {
-      index: ['39', '90', '144', '211'], about: ['39', '46', '84', '114'], team: ['39', '46', '76', '99'],
-      page: ['39', '40', '43', '44', '64', '68'], contact: ['39', '42', '49', '77'],
-      category: ['40', '42', '61', '69', '73'], author: ['39', '42', '43', '44', '46', '65', '73', '77'],
-      article: ['39', '40', '42', '51', '54', '57', '70', '85', '97', '113', '117'],
-      sitemap: ['39', '42', '44', '97', '99'], '404': ['39', '41', '44', '52', '56'],
+      index: ['35', '40', '76', '145', '191', '215'], about: ['35', '41', '42', '54', '63', '99', '118', '124'], team: ['35', '41', '42', '47', '56', '68', '70', '106'],
+      page: ['35', '40', '41', '42', '43', '44', '62', '66'], contact: ['35', '41', '42', '45', '53', '73', '98'],
+      category: ['35', '41', '42', '43', '55', '100', '109'], author: ['35', '40', '42', '43', '44', '45', '47', '86', '95'],
+      article: ['35', '37', '40', '41', '42', '46', '48', '49', '50', '84', '90', '92', '110', '118', '139'],
+      sitemap: ['35', '40', '41', '42', '43', '70', '71', '94'], '404': ['35', '37', '42', '43', '44', '45', '50', '54'],
     }[route.family] || [];
     const presentIds = new Set(currentStructure.map((entry) => entry.split(':', 1)[0]));
     const missingRequired = requiredMarkers.filter((id) => !presentIds.has(id));
@@ -110,7 +110,7 @@ async function assertDynamicInputs() {
   const marker = 'DEMO-LOCK-DYNAMIC-MARKER';
   const config = JSON.parse(originals.get(files.config)); config.seo.title = marker;
   const header = JSON.parse(originals.get(files.header)); header.items[0] = { label: marker, href: '/dynamic-navigation-proof/' };
-  const about = originals.get(files.about).replace('title: About State News Digest', `title: ${marker}`);
+  const about = originals.get(files.about).replace('title: About State News Central', `title: ${marker}`);
   await writeFile(files.config, JSON.stringify(config, null, 2) + '\n');
   await writeFile(files.header, JSON.stringify(header, null, 2) + '\n');
   await writeFile(files.about, about);

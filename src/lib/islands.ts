@@ -44,16 +44,18 @@ export const islands: IslandRegistry = {
 		},
 		component: AuthorIsland,
 		wrapper: { tag: 'div' },
-		propsFromData: (data) => ({
+		propsFromData: (data, params) => ({
 			user: (data as QueryResult<UserQuery>).data?.user as CmsUser | undefined,
+			page: Number(params.get('page') || '1'),
 		}),
 	},
 	category: {
 		fetch: (_request, params) => getEditableCategory(params.get('slug') ?? ''),
 		component: CategoryIsland,
 		wrapper: { tag: 'div' },
-		propsFromData: (data) => ({
+		propsFromData: (data, params) => ({
 			category: (data as QueryResult<CategoryQuery>).data?.category as CmsCategory | undefined,
+			page: Number(params.get('page') || '1'),
 		}),
 	},
 	global: {
@@ -86,6 +88,15 @@ export const islands: IslandRegistry = {
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			navigation: (data as QueryResult<NavigationQuery>).data?.navigation,
+		}),
+	},
+	'footer-legal-navigation': {
+		fetch: (_request, params) => getEditableNavigation(params.get('slug') ?? 'footer-legal.json'),
+		component: FooterNavigation,
+		wrapper: { tag: 'div' },
+		propsFromData: (data) => ({
+			navigation: (data as QueryResult<NavigationQuery>).data?.navigation,
+			isLegal: true,
 		}),
 	},
 };

@@ -2,30 +2,30 @@
   "headerNavigation": "src/content/navigation/header.json",
   "footerNavigation": "src/content/navigation/footer.json",
   "seo": {
-    "title": "State News Digest",
-    "description": "A clearer view of the news — useful context, careful reporting, and stories that matter.",
-    "siteOwner": "Henry Lawson",
-    "logo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
-    "favicon": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
-    "footerLogo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png"
+    "title": "State News Central",
+    "description": "News with context about the communities and places behind the story.",
+    "siteOwner": "State News Central",
+    "logo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782087/statenewscentral/demo-v2/84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png",
+    "favicon": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782087/statenewscentral/demo-v2/84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png",
+    "footerLogo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792782087/statenewscentral/demo-v2/84d2be4f1800ef033fe5202e84d7865d327d4e090952bb101e9d3f38557420bc.png"
   },
   "contactForm": {
     "formspreeEndpoint": "https://formspree.io/f/xljjrvrw",
     "heading": "Send a message",
-    "description": "Messages are routed to the appropriate State News Digest team.",
+    "description": "State News Central handles most correspondence through its newsroom and general-inquiry channels.",
     "buttonText": "Send Message",
     "note": "All fields except phone are required.",
-    "subject": "State News Digest website inquiry"
+    "subject": "State News Central website inquiry"
   },
   "contributorCta": {
     "eyebrow": "Write for us",
     "title": "Have a story worth telling?",
-    "description": "State News Digest accepts work from outside contributors — freelance journalists, working professionals with substantive expertise, and academics whose work translates for a general readership.",
+    "description": "State News Central welcomes contributions from writers, experts, and practitioners with original reporting or informed perspective.",
     "buttonText": "Write for Us",
     "buttonLink": "/write-for-us/"
   },
   "footer": {
-    "copyrightText": "© 2026 State News Digest. All rights reserved."
+    "copyrightText": "© 2026 State News Central. All rights reserved."
   },
   "notFound": {
     "title": "This page could not be found.",

@@ -3,7 +3,7 @@ import { tinaField } from '@tinacms/astro/tina-field';
 import assets from '../../data/state-news-demo-assets.json';
 const { config } = Astro.props;
 const seo = config?.seo ?? {};
-const siteTitle = seo.title || 'State News Digest';
+const siteTitle = seo.title || 'State News Central';
 const logo = seo.logo || assets.logo;
 ---
 <a href="/" class="snd-header__logo" aria-label={`${siteTitle} home`}>
