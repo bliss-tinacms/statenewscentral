@@ -4,7 +4,9 @@ const { navigation } = Astro.props;
 const items = (navigation?.items || []).filter((item:any) => item?.label && item?.href);
 ---
 <div class="snd-header__nav-wrap">
-  <button class="snd-menu" type="button" aria-label="Menu" aria-expanded="false">Menu</button>
+  <button class="snd-menu" type="button" aria-label="Open menu" aria-expanded="false">
+    <span class="snd-menu__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
   <nav class="snd-header__nav snd-header__desktop" aria-label={navigation?.title || 'Primary navigation'}>
     {items.map((item:any) => <a class="scp0" href={item.href} data-tina-field={tinaField(item,'label')}>{item.label}</a>)}
   </nav>
@@ -23,7 +25,7 @@ const items = (navigation?.items || []).filter((item:any) => item?.label && item
       const open = !header.classList.contains('is-open');
       header.classList.toggle('is-open', open);
       button.setAttribute('aria-expanded', open ? 'true' : 'false');
-      button.textContent = open ? 'Close' : 'Menu';
+      button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     });
   });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
