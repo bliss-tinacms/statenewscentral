@@ -90,7 +90,11 @@ function categoryFileMap(categories: any[]) {
 
 const matchedPage = routeSlug
   ? allPages.find((page: CmsPage) => getPageRouteSlug(page) === routeSlug || page._sys.filename === routeSlug)
-  : allPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/');
+  // The listPages live query is intentionally lightweight and therefore lacks
+  // homepage authorityLink/image/text fields. Prefer the complete immutable
+  // home document so SSR never emits unresolved __SND_* placeholders.
+  : localPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/')
+    || allPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/');
 
 let view: 'page' | 'category' | 'blog' | 'not-found' = 'not-found';
 let pageData: any = null;
