@@ -11,6 +11,7 @@ lerna-debug.log*
 .playwright-mcp
 .impeccable
 .prototools
+.hermes/
 
 # TinaCMS generated output (also covered by tina/.gitignore)
 tina/__generated__

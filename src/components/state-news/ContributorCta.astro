@@ -1,0 +1,11 @@
+---
+import { getConfig } from '../../lib/data';
+const { config = null } = Astro.props;
+let loadedConfig: any = null;
+if (!config) {
+  try { loadedConfig = (await getConfig()).data?.config || null; } catch (_error) { /* render exact local fallback copy */ }
+}
+const currentConfig = config || loadedConfig;
+const cta = currentConfig?.contributorCta || {};
+---
+<section style="background:#f1f6f2;margin-top:clamp(64px,8vw,112px)"><div style="max-width:1320px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(16px,3vw,32px);display:flex;flex-wrap:wrap;gap:24px clamp(32px,6vw,96px);align-items:center"><div style="flex:1 1 420px;display:flex;flex-direction:column;gap:14px"><div style="align-self:flex-start;display:inline-flex;background:#f1f6f2;color:#1e6b4f;padding:7px 14px;border-radius:999px;font-weight:700;font-size:14px;letter-spacing:.02em">{cta.eyebrow || 'Write for us'}</div><h2 style="font-family:'Young Serif',serif;font-weight:400;font-size:clamp(32px,3.8vw,52px);line-height:1.08;letter-spacing:-.02em;margin:0;color:#17392c;text-wrap:balance">{cta.title || 'Have a story worth telling?'}</h2></div><div style="flex:1 1 420px;display:flex;flex-direction:column;gap:22px"><p style="margin:0;font-size:18px;line-height:1.7;color:#2c4238;text-wrap:pretty">{cta.description || 'State News Digest accepts work from outside contributors — freelance journalists, working professionals with substantive expertise, and academics whose work translates for a general readership.'}</p><a href={cta.buttonLink || '/write-for-us/'} class="scp1" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;background:#1e6b4f;color:#fff;padding:17px 30px;border-radius:999px;font-weight:700;font-size:17px">{cta.buttonText || 'Write for Us'} <span>→</span></a></div></div></section>

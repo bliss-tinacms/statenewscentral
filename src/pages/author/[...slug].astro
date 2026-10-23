@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import DemoAuthorArchive from '../../components/demo/DemoAuthorArchive.astro';
+import { islands } from '../../lib/islands';
 import { getConfig, getUser, listBlogs } from '../../lib/data';
 
 const POSTS_PER_PAGE = 30;
@@ -94,8 +96,8 @@ const authorObject = allPosts.find((post) => post.author && typeof post.author =
 const archiveTitle = editableAuthor?.name || labelFromReference(authorObject) || Astro.props.archiveTitle || 'Author';
 const authorSeo = (editableAuthor as any)?.seo || (authorObject as any)?.seo || null;
 const basePath = '/author/' + parsed.slug;
-const seoTitle = authorSeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'Starter Site');
-const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from Starter Site.';
+const seoTitle = authorSeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest');
+const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from State News Digest.';
 ---
 
 <Base
@@ -108,5 +110,7 @@ const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read t
 	noindex={authorSeo?.noindex || false}
 	nofollow={authorSeo?.nofollow || false}
 >
-	<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
+	<TinaIsland name="author" wrapper={islands.author.wrapper} params={{ slug: parsed.slug }} primary>
+		<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
+	</TinaIsland>
 </Base>

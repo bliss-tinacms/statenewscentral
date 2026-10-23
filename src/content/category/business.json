@@ -1,0 +1,13 @@
+{
+  "title": "Business",
+  "description": "Companies, markets, and household economics.",
+  "shortDescription": "Companies, markets, and household economics.",
+  "displayOrder": 3,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Business | State News Digest",
+    "metaDescription": "Companies, markets, and household economics.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

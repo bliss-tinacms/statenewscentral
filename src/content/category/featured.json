@@ -1,0 +1,13 @@
+{
+  "title": "Featured",
+  "description": "In-depth stories selected by our editors.",
+  "shortDescription": "In-depth stories selected by our editors.",
+  "displayOrder": 8,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Featured | State News Digest",
+    "metaDescription": "In-depth stories selected by our editors.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

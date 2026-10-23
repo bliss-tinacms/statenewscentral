@@ -351,6 +351,7 @@ var BlogCollection = {
     seoFields,
     { name: "pubDate", label: "Publication Date", type: "datetime" },
     { name: "updatedDate", label: "Updated Date", type: "datetime" },
+    { name: "readTime", label: "Read Time", type: "string", description: "Example: 7 min read" },
     {
       label: "Categories",
       name: "categories",
@@ -400,6 +401,9 @@ var CategoryCollection = {
         component: "textarea"
       }
     },
+    { type: "string", name: "shortDescription", label: "Short Description" },
+    { type: "number", name: "displayOrder", label: "Display Order" },
+    { type: "boolean", name: "showOnHome", label: "Show on Homepage" },
     seoFields
   ]
 };
@@ -468,6 +472,45 @@ var GlobalConfigCollection = {
         { name: "buttonText", label: "Button Text", type: "string" },
         { name: "note", label: "Form Note", type: "string", ui: { component: "textarea" } },
         { name: "subject", label: "Email Subject", type: "string" }
+      ]
+    },
+    {
+      name: "contributorCta",
+      label: "Contributor CTA",
+      type: "object",
+      fields: [
+        { name: "eyebrow", label: "Eyebrow", type: "string" },
+        { name: "title", label: "Title", type: "string" },
+        { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
+        { name: "buttonText", label: "Button Text", type: "string" },
+        { name: "buttonLink", label: "Button Link", type: "string" }
+      ]
+    },
+    {
+      name: "footer",
+      label: "Footer",
+      type: "object",
+      fields: [{ name: "copyrightText", label: "Copyright Text", type: "string" }]
+    },
+    {
+      name: "notFound",
+      label: "404 Page",
+      type: "object",
+      fields: [
+        { name: "title", label: "Title", type: "string" },
+        { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
+        { name: "buttonText", label: "Button Text", type: "string" },
+        { name: "buttonLink", label: "Button Link", type: "string" },
+        {
+          name: "quickLinks",
+          label: "Quick Links",
+          type: "object",
+          list: true,
+          fields: [
+            { name: "label", label: "Label", type: "string" },
+            { name: "href", label: "URL", type: "string" }
+          ]
+        }
       ]
     },
     {
@@ -1169,7 +1212,9 @@ function cleanPublicSlug2(value) {
   return input;
 }
 function filenameFromDocument2(document) {
-  return cleanPublicSlug2(document?._sys?.filename || document?._sys?.basename || "");
+  return cleanPublicSlug2(
+    document?._sys?.filename || document?._sys?.basename || ""
+  );
 }
 var PageCollection = {
   name: "page",
@@ -1206,6 +1251,97 @@ var PageCollection = {
     },
     seoFields,
     {
+      name: "authorityTemplate",
+      label: "State News Template",
+      type: "string",
+      options: [
+        { label: "Home", value: "index" },
+        { label: "About", value: "about" },
+        { label: "Contact", value: "contact" },
+        { label: "Team", value: "team" },
+        { label: "Editorial Page", value: "page" },
+        { label: "Sitemap", value: "sitemap" }
+      ]
+    },
+    {
+      name: "authorityText",
+      label: "Visible Text",
+      type: "object",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item.value || item.source || "Text" })
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo Text",
+          type: "string",
+          ui: { readonly: true }
+        },
+        {
+          name: "value",
+          label: "Published Text",
+          type: "string",
+          ui: { component: "textarea" }
+        }
+      ]
+    },
+    {
+      name: "authorityImages",
+      label: "Visible Images",
+      type: "object",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item.alt || item.source || "Image" })
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo Image",
+          type: "string",
+          ui: { readonly: true }
+        },
+        { name: "url", label: "Published Image", type: "image" },
+        { name: "alt", label: "Alt Text", type: "string" }
+      ]
+    },
+    {
+      name: "authorityLinks",
+      label: "Visible Links",
+      type: "object",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item.label || item.href || "Link" })
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo URL",
+          type: "string",
+          ui: { readonly: true }
+        },
+        { name: "href", label: "Published URL", type: "string" },
+        { name: "label", label: "Internal Label", type: "string" }
+      ]
+    },
+    { name: "authorityUpdatedDate", label: "Last Updated", type: "datetime" },
+    {
+      name: "authoritySections",
+      label: "Editorial Page Sections",
+      type: "object",
+      list: true,
+      ui: { itemProps: (item) => ({ label: item.heading || "Section" }) },
+      fields: [
+        { name: "heading", label: "Heading", type: "string" },
+        {
+          name: "body",
+          label: "Body",
+          type: "string",
+          ui: { component: "textarea" }
+        }
+      ]
+    },
+    {
       type: "object",
       list: true,
       name: "blocks",
@@ -1239,7 +1375,7 @@ var UserCollection = {
   format: "json",
   ui: {
     router({ document }) {
-      return `/blog/author/${document._sys.filename}/`;
+      return `/author/${document._sys.filename}/`;
     }
   },
   fields: [
@@ -1273,6 +1409,15 @@ var UserCollection = {
       name: "email",
       label: "Email"
     },
+    { type: "string", name: "location", label: "Location" },
+    {
+      type: "string",
+      name: "teamGroup",
+      label: "Team Group",
+      options: ["Leadership", "Senior Editors", "Contributors"]
+    },
+    { type: "number", name: "teamOrder", label: "Team Display Order" },
+    { type: "boolean", name: "showOnTeam", label: "Show on Team Page" },
     seoFields
   ]
 };

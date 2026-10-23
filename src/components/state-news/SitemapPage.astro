@@ -1,0 +1,49 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import ContributorCta from './ContributorCta.astro';
+import { listBlogs, listLocalBlogs, listLocalPages, listPages } from '../../lib/data';
+import { getBlogPermalink } from '../../lib/permalinks';
+
+const { data = null } = Astro.props;
+const localPages = listLocalPages();
+const localPosts = listLocalBlogs();
+let livePages: any[] = [];
+let livePosts: any[] = [];
+try { [livePages, livePosts] = await Promise.all([listPages(), listBlogs()]); } catch (_error) { /* local release remains authoritative fallback */ }
+const mergeByFilename = (local: any[], live: any[]) => {
+  const merged = new Map(local.map((item: any) => [String(item?._sys?.filename || item?.permalink || item?.title), item]));
+  for (const item of live) merged.set(String(item?._sys?.filename || item?.permalink || item?.title), item);
+  return [...merged.values()];
+};
+const pages = mergeByFilename(localPages, livePages);
+const posts = mergeByFilename(localPosts, livePosts);
+const pageHref = (page: any) => {
+  const filename = String(page?._sys?.filename || '');
+  if (filename === 'home') return '/';
+  const slug = String(page?.permalink || filename).replace(/^\/+|\/+$/g, '');
+  return slug ? `/${slug}/` : '/';
+};
+const postHref = (post: any) => {
+  const url = getBlogPermalink(post);
+  return url.endsWith('/') ? url : `${url}/`;
+};
+const excludedPages = new Set(['sitemap', '404']);
+const pageRows = pages
+  .filter((page: any) => !excludedPages.has(String(page?._sys?.filename || '').toLowerCase()))
+  .map((page: any) => ({ label: page.title || page._sys?.filename, href: pageHref(page) }));
+if (!pageRows.some((row: any) => row.href === '/blog/')) {
+  const homeIndex = Math.max(0, pageRows.findIndex((row: any) => row.href === '/'));
+  pageRows.splice(homeIndex + 1, 0, { label: 'Blog', href: '/blog/' });
+}
+const postRows = posts.map((post: any) => ({ label: post.title || post._sys?.filename, href: postHref(post) }));
+---
+<section class="snd-map">
+  <div class="snd-map__inner">
+    <h1 data-tina-field={data ? tinaField(data,'title') : undefined}>{data?.title || 'Sitemap'}</h1>
+    <div class="snd-map__grid">
+      <section><h2>Webpages</h2><ul>{pageRows.map((row: any) => <li><a href={row.href}><span>{row.label}</span><span>→</span></a></li>)}</ul></section>
+      <section><h2>Posts</h2><ul>{postRows.map((row: any) => <li><a href={row.href}><span>{row.label}</span><span>→</span></a></li>)}</ul></section>
+    </div>
+  </div>
+</section>
+<ContributorCta />

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { getBlogPermalink } from '../../lib/permalinks';
 import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
 import { tinaField } from '@tinacms/astro/tina-field';
-import type { CmsBlog } from '../../lib/data';
+import { getConfig, type CmsBlog } from '../../lib/data';
 import FormattedDate from '../FormattedDate.astro';
 import { mdxComponents } from '../mdx/components';
 
@@ -14,6 +14,12 @@ interface Props {
 }
 
 const { data, relatedPosts = [] } = Astro.props;
+const siteConfig = (await getConfig()).data?.config ?? null;
+const siteName = siteConfig?.seo?.title || 'State News Digest';
+const contributor = siteConfig?.contributorCta || {};
+const contactEmail = (siteConfig?.contactLinks || [])
+	.map((item: any) => String(item?.link || ''))
+	.find((link: string) => link.startsWith('mailto:')) || '/contact/';
 
 type ReferenceObject = {
 	title?: string | null;
@@ -140,9 +146,13 @@ const postAuthor = data ? getAuthor(data.author) : null;
 const author = postAuthor;
 const authorName = getReferenceLabel(postAuthor) || getReferenceLabel(data?.author) || 'Site Staff';
 const authorSlug = getReferenceSlug(data?.author) || getReferenceSlug(author);
-const authorArchiveUrl = authorSlug ? `/blog/author/${authorSlug}/` : '/blog/';
+const authorArchiveUrl = authorSlug ? `/author/${authorSlug}/` : '/blog/';
 const authorInitials = authorName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'SS';
-const categoryLabel = getReferenceLabel(getPostCategories(data)) || 'Article';
+const categoryItems = getReferenceItems(getPostCategories(data)).map((item) => ({
+	label: getSingleReferenceLabel(item) || 'Article',
+	slug: getReferenceSlug(item),
+}));
+const categoryLabel = categoryItems.map((item) => item.label).join(', ') || 'Article';
 const publishedDate = data?.pubDate ? new Date(data.pubDate) : getFallbackPublishedDate(data);
 const shareUrl = data ? getPostUrl(data) : '/blog/';
 
@@ -169,9 +179,9 @@ const heroImageAlt = (() => {
 		<header class="ah">
 			<div class="w">
 				<div class="ah-in">
-					{categoryLabel && (
-						<div data-tina-field={tinaField(data, 'categories')} class="ah-k">
-							<b>{categoryLabel}</b>
+					{categoryItems.length > 0 && (
+						<div data-tina-field={tinaField(data, 'categories')} class="ah-k category-badges">
+							{categoryItems.map((item) => item.slug ? <a href={`/${item.slug}/`}><b>{item.label}</b></a> : <b>{item.label}</b>)}
 						</div>
 					)}
 					{data.title && <h1 data-tina-field={tinaField(data, 'title')}>{data.title}</h1>}
@@ -188,6 +198,7 @@ const heroImageAlt = (() => {
 						</div>
 						<div class="ah-dt">
 							{publishedDate && <span data-tina-field={tinaField(data, 'pubDate')}><FormattedDate date={publishedDate} /></span>}
+							{data.readTime && <><br /><span data-tina-field={tinaField(data, 'readTime')}>{data.readTime}</span></>}
 							{data.updatedDate && <><br /><span data-tina-field={tinaField(data, 'updatedDate')}>Updated <FormattedDate date={new Date(data.updatedDate)} /></span></>}
 						</div>
 					</div>
@@ -221,15 +232,15 @@ const heroImageAlt = (() => {
 						<div class="rc-t">Share this story</div>
 						<div class="sh">
 							<a href={shareUrl} data-copy-link aria-label="Copy this post URL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11 4.93"></path><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L13 19.07"></path></svg><span>Copy Link</span></a>
-							<a href="mailto:hello@example.com"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg><span>Email Us</span></a>
+							<a href={contactEmail}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg><span>Email Us</span></a>
 							<a href="/contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v10H8l-3 3z"></path></svg><span>Send a Tip</span></a>
 						</div>
 					</div>
 					<div class="rc">
 						<div class="rc-t">Write for us</div>
 						<div class="rc-b">
-							<a href="/write-for-us" class="rr">
-								<div class="rr-h">Share a news tip, expert insight, or original story idea with the Starter Site editorial team &rarr;</div>
+							<a href={contributor.buttonLink || '/write-for-us/'} class="rr">
+								<div class="rr-h">{contributor.description || `Share a news tip, expert insight, or original story idea with the ${siteName} editorial team.`} &rarr;</div>
 							</a>
 						</div>
 					</div>
@@ -246,7 +257,7 @@ const heroImageAlt = (() => {
 						<div class="corr-t">Published by</div>
 						<div class="corr-b">
 							<strong id="post-author-heading"><a href={authorArchiveUrl}>{authorName}</a></strong>
-							{author?.bio ? ` — ${author.bio}` : ' — Starter Site newsroom contributor.'}
+							{author?.bio ? ` — ${author.bio}` : ` — ${siteName} newsroom contributor.`}
 						</div>
 					</section>
 				</article>

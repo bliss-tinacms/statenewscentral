@@ -8,7 +8,7 @@ export const UserCollection: Collection = {
   format: "json",
   ui: {
     router({ document }) {
-      return `/blog/author/${document._sys.filename}/`;
+      return `/author/${document._sys.filename}/`;
     },
   },
   fields: [
@@ -42,6 +42,15 @@ export const UserCollection: Collection = {
       name: "email",
       label: "Email",
     },
+    { type: "string", name: "location", label: "Location" },
+    {
+      type: "string",
+      name: "teamGroup",
+      label: "Team Group",
+      options: ["Leadership", "Senior Editors", "Contributors"],
+    },
+    { type: "number", name: "teamOrder", label: "Team Display Order" },
+    { type: "boolean", name: "showOnTeam", label: "Show on Team Page" },
     seoFields,
   ],
 };

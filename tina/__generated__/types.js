@@ -25,6 +25,7 @@ export const BlogPartsFragmentDoc = gql`
   }
   pubDate
   updatedDate
+  readTime
   categories
   author {
     ... on User {
@@ -34,6 +35,10 @@ export const BlogPartsFragmentDoc = gql`
       avatar
       bio
       email
+      location
+      teamGroup
+      teamOrder
+      showOnTeam
       seo {
         __typename
         metaTitle
@@ -70,6 +75,9 @@ export const CategoryPartsFragmentDoc = gql`
   __typename
   title
   description
+  shortDescription
+  displayOrder
+  showOnHome
   seo {
     __typename
     metaTitle
@@ -99,6 +107,30 @@ export const PagePartsFragmentDoc = gql`
     canonicalUrl
     noindex
     nofollow
+  }
+  authorityTemplate
+  authorityText {
+    __typename
+    source
+    value
+  }
+  authorityImages {
+    __typename
+    source
+    url
+    alt
+  }
+  authorityLinks {
+    __typename
+    source
+    href
+    label
+  }
+  authorityUpdatedDate
+  authoritySections {
+    __typename
+    heading
+    body
   }
   blocks {
     __typename
@@ -415,6 +447,10 @@ export const UserPartsFragmentDoc = gql`
   avatar
   bio
   email
+  location
+  teamGroup
+  teamOrder
+  showOnTeam
   seo {
     __typename
     metaTitle
@@ -521,6 +557,30 @@ export const ConfigPartsFragmentDoc = gql`
     buttonText
     note
     subject
+  }
+  contributorCta {
+    __typename
+    eyebrow
+    title
+    description
+    buttonText
+    buttonLink
+  }
+  footer {
+    __typename
+    copyrightText
+  }
+  notFound {
+    __typename
+    title
+    description
+    buttonText
+    buttonLink
+    quickLinks {
+      __typename
+      label
+      href
+    }
   }
   codeInjection {
     __typename

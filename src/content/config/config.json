@@ -1,21 +1,51 @@
 {
-  "headerNavigation": "",
-  "footerNavigation": "",
+  "headerNavigation": "src/content/navigation/header.json",
+  "footerNavigation": "src/content/navigation/footer.json",
   "seo": {
-    "title": "Starter Site",
-    "description": "A clean Astro and TinaCMS starter ready for your content, brand, and services.",
-    "siteOwner": "Site Owner",
-    "logo": "https://res.cloudinary.com/qwdyyii2/image/upload/v1791209754/boilerplate/favicon.png",
-    "favicon": "/favicon.svg",
-    "footerLogo": ""
+    "title": "State News Digest",
+    "description": "A clearer view of the news — useful context, careful reporting, and stories that matter.",
+    "siteOwner": "Henry Lawson",
+    "logo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
+    "favicon": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png",
+    "footerLogo": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703235/statenewscentral/ce9bb2415a783272.png"
   },
   "contactForm": {
-    "formspreeEndpoint": "",
-    "heading": "Contact us",
-    "description": "Configure a unique Formspree endpoint for this site before enabling submissions.",
+    "formspreeEndpoint": "https://formspree.io/f/xljjrvrw",
+    "heading": "Send a message",
+    "description": "Messages are routed to the appropriate State News Digest team.",
     "buttonText": "Send Message",
-    "note": "This form remains disabled until its Formspree endpoint is configured.",
-    "subject": "Starter Site contact form submission"
+    "note": "All fields except phone are required.",
+    "subject": "State News Digest website inquiry"
+  },
+  "contributorCta": {
+    "eyebrow": "Write for us",
+    "title": "Have a story worth telling?",
+    "description": "State News Digest accepts work from outside contributors — freelance journalists, working professionals with substantive expertise, and academics whose work translates for a general readership.",
+    "buttonText": "Write for Us",
+    "buttonLink": "/write-for-us/"
+  },
+  "footer": {
+    "copyrightText": "© 2026 State News Digest. All rights reserved."
+  },
+  "notFound": {
+    "title": "This page could not be found.",
+    "description": "The link may be outdated, or the page may have moved. Try one of the sections below to keep reading.",
+    "buttonText": "Back to Homepage",
+    "buttonLink": "/",
+    "quickLinks": [
+      {
+        "label": "Blog",
+        "href": "/blog/"
+      },
+      {
+        "label": "About Us",
+        "href": "/about/"
+      },
+      {
+        "label": "Contact Us",
+        "href": "/contact/"
+      }
+    ]
   },
   "codeInjection": {
     "headerCode": "",

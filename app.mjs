@@ -24,7 +24,7 @@ if (envFile) {
     const key = line.slice(0, index).trim();
     let value = line.slice(index + 1).trim();
     value = value.replace(/^['"]|['"]$/g, '');
-    process.env[key] = value;
+    if (process.env[key] === undefined) process.env[key] = value;
   }
 }
 
@@ -45,6 +45,7 @@ if (missingRuntime.length) {
   throw new Error(`Refusing to start: missing required runtime variables: ${missingRuntime.join(', ')}`);
 }
 
+process.env.ASTRO_NODE_AUTOSTART = 'disabled';
 const { startServer } = await import('./dist/server/entry.mjs');
 
 startServer();

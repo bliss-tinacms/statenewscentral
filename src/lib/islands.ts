@@ -7,15 +7,17 @@
 import type { IslandRegistry } from '@tinacms/astro/experimental';
 import type { QueryResult } from '@tinacms/astro/data';
 
-import type { BlogQuery, CategoryQuery, ConfigQuery, PageQuery, UserQuery } from '../../tina/__generated__/types';
+import type { BlogQuery, CategoryQuery, ConfigQuery, NavigationQuery, PageQuery, UserQuery } from '../../tina/__generated__/types';
 import type { CmsBlog, CmsCategory, CmsConfig, CmsPage, CmsUser } from './data';
 import PageBody from '../components/islands/PageBody.astro';
 import BlogBody from '../components/islands/BlogBody.astro';
-import AuthorArchiveHeader from '../components/islands/AuthorArchiveHeader.astro';
-import CategoryArchiveHeader from '../components/islands/CategoryArchiveHeader.astro';
-import Header from '../templates/Header.astro';
-import Footer from '../templates/Footer.astro';
-import { getEditableBlog, getEditableCategory, getEditableConfig, getEditablePage, getEditableUser } from './data';
+import AuthorIsland from '../components/islands/AuthorIsland.astro';
+import CategoryIsland from '../components/islands/CategoryIsland.astro';
+import HeaderBrand from '../components/state-news/HeaderBrand.astro';
+import HeaderNavigation from '../components/state-news/HeaderNavigation.astro';
+import FooterBrand from '../components/state-news/FooterBrand.astro';
+import FooterNavigation from '../components/state-news/FooterNavigation.astro';
+import { getEditableBlog, getEditableCategory, getEditableConfig, getEditableNavigation, getEditablePage, getEditableUser } from './data';
 
 export const islands: IslandRegistry = {
 	page: {
@@ -40,7 +42,7 @@ export const islands: IslandRegistry = {
 			if (!slug) throw new Error('Author slug is required.');
 			return getEditableUser(slug);
 		},
-		component: AuthorArchiveHeader,
+		component: AuthorIsland,
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			user: (data as QueryResult<UserQuery>).data?.user as CmsUser | undefined,
@@ -48,7 +50,7 @@ export const islands: IslandRegistry = {
 	},
 	category: {
 		fetch: (_request, params) => getEditableCategory(params.get('slug') ?? ''),
-		component: CategoryArchiveHeader,
+		component: CategoryIsland,
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			category: (data as QueryResult<CategoryQuery>).data?.category as CmsCategory | undefined,
@@ -56,18 +58,34 @@ export const islands: IslandRegistry = {
 	},
 	global: {
 		fetch: () => getEditableConfig(),
-		component: Header,
+		component: HeaderBrand,
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			config: (data as QueryResult<ConfigQuery>).data?.config as CmsConfig | undefined,
 		}),
 	},
+	navigation: {
+		fetch: (_request, params) => getEditableNavigation(params.get('slug') ?? 'header.json'),
+		component: HeaderNavigation,
+		wrapper: { tag: 'div' },
+		propsFromData: (data) => ({
+			navigation: (data as QueryResult<NavigationQuery>).data?.navigation,
+		}),
+	},
 	'global-footer': {
 		fetch: () => getEditableConfig(),
-		component: Footer,
+		component: FooterBrand,
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			config: (data as QueryResult<ConfigQuery>).data?.config as CmsConfig | undefined,
+		}),
+	},
+	'footer-navigation': {
+		fetch: (_request, params) => getEditableNavigation(params.get('slug') ?? 'footer.json'),
+		component: FooterNavigation,
+		wrapper: { tag: 'div' },
+		propsFromData: (data) => ({
+			navigation: (data as QueryResult<NavigationQuery>).data?.navigation,
 		}),
 	},
 };

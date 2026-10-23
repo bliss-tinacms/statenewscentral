@@ -1,20 +1,19 @@
-import type { Collection } from 'tinacms';
-import { heroBlockSchema } from '../../src/components/blocks/hero.template';
-import { featuresBlockSchema } from '../../src/components/blocks/features.template';
-import { statsBlockSchema } from '../../src/components/blocks/stats.template';
-import { ctaBlockSchema } from '../../src/components/blocks/cta.template';
-import { testimonialBlockSchema } from '../../src/components/blocks/testimonial.template';
-import { calloutBlockSchema } from '../../src/components/blocks/callout.template';
-import { contentBlockSchema } from '../../src/components/blocks/content.template';
-import { videoBlockSchema } from '../../src/components/blocks/video.template';
-import { splitBlockSchema } from '../../src/components/blocks/split.template';
-import { aboutMockup17BlockSchema } from '../../src/components/blocks/about-mockup17.template';
-import { contactMockup17BlockSchema } from '../../src/components/blocks/contact-mockup17.template';
-import { ourTeamMockup17BlockSchema } from '../../src/components/blocks/our-team-mockup17.template';
-import { seoFields } from '../fields/seo';
-import { viewFrontendField } from '../fields/view-frontend';
-import { homepageTemplateBlockSchema } from '../../src/components/blocks/homepage-template.template';
-
+import type { Collection } from "tinacms";
+import { heroBlockSchema } from "../../src/components/blocks/hero.template";
+import { featuresBlockSchema } from "../../src/components/blocks/features.template";
+import { statsBlockSchema } from "../../src/components/blocks/stats.template";
+import { ctaBlockSchema } from "../../src/components/blocks/cta.template";
+import { testimonialBlockSchema } from "../../src/components/blocks/testimonial.template";
+import { calloutBlockSchema } from "../../src/components/blocks/callout.template";
+import { contentBlockSchema } from "../../src/components/blocks/content.template";
+import { videoBlockSchema } from "../../src/components/blocks/video.template";
+import { splitBlockSchema } from "../../src/components/blocks/split.template";
+import { aboutMockup17BlockSchema } from "../../src/components/blocks/about-mockup17.template";
+import { contactMockup17BlockSchema } from "../../src/components/blocks/contact-mockup17.template";
+import { ourTeamMockup17BlockSchema } from "../../src/components/blocks/our-team-mockup17.template";
+import { seoFields } from "../fields/seo";
+import { viewFrontendField } from "../fields/view-frontend";
+import { homepageTemplateBlockSchema } from "../../src/components/blocks/homepage-template.template";
 
 function slugifyFilename(value?: string | null): string {
   if (!value || typeof value !== "string") return "untitled";
@@ -38,7 +37,8 @@ function slugifyFilename(value?: string | null): string {
     const isLetter = ch >= "a" && ch <= "z";
     const isNumber = ch >= "0" && ch <= "9";
     const isSlash = ch === "/";
-    const isAllowed = isLetter || isNumber || isSlash || ch === "-" || ch === "_" || ch === ".";
+    const isAllowed =
+      isLetter || isNumber || isSlash || ch === "-" || ch === "_" || ch === ".";
     if (isAllowed) {
       output += ch;
       lastWasDash = false;
@@ -73,49 +73,146 @@ function cleanPublicSlug(value?: string | null): string {
 }
 
 function filenameFromDocument(document: any): string {
-  return cleanPublicSlug(document?._sys?.filename || document?._sys?.basename || "");
+  return cleanPublicSlug(
+    document?._sys?.filename || document?._sys?.basename || "",
+  );
 }
 
 export const PageCollection: Collection = {
-  name: 'page',
-  label: 'Pages',
-  path: 'src/content/page',
-  format: 'mdx',
+  name: "page",
+  label: "Pages",
+  path: "src/content/page",
+  format: "mdx",
   ui: {
     filename: {
       readonly: false,
       parse: (filename) => slugifyFilename(filename),
-      slugify: (values) => slugifyFilename(values?.title || 'untitled'),
+      slugify: (values) => slugifyFilename(values?.title || "untitled"),
     },
     router: ({ document }) => {
-      const slug = cleanPublicSlug((document as any)?.permalink) || filenameFromDocument(document);
+      const slug =
+        cleanPublicSlug((document as any)?.permalink) ||
+        filenameFromDocument(document);
       if (!slug || slug === "home" || slug === "index") return "/";
       return "/" + slug;
     },
   },
   fields: [
-    viewFrontendField('page'),
+    viewFrontendField("page"),
     {
-      name: 'title',
-      label: 'Title',
-      type: 'string',
+      name: "title",
+      label: "Title",
+      type: "string",
       isTitle: true,
       required: true,
-      description: 'Main visible page title shown at the top of the frontend page.',
+      description:
+        "Main visible page title shown at the top of the frontend page.",
     },
     {
-      name: 'permalink',
-      label: 'Permalink',
-      type: 'string',
-      description: 'Optional custom public URL path. Leave blank to use the filename/slug.',
+      name: "permalink",
+      label: "Permalink",
+      type: "string",
+      description:
+        "Optional custom public URL path. Leave blank to use the filename/slug.",
     },
 
     seoFields,
     {
-      type: 'object',
+      name: "authorityTemplate",
+      label: "State News Template",
+      type: "string",
+      options: [
+        { label: "Home", value: "index" },
+        { label: "About", value: "about" },
+        { label: "Contact", value: "contact" },
+        { label: "Team", value: "team" },
+        { label: "Editorial Page", value: "page" },
+        { label: "Sitemap", value: "sitemap" },
+      ],
+    },
+    {
+      name: "authorityText",
+      label: "Visible Text",
+      type: "object",
       list: true,
-      name: 'blocks',
-      label: 'Page Sections',
+      ui: {
+        itemProps: (item) => ({ label: item.value || item.source || "Text" }),
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo Text",
+          type: "string",
+          ui: { readonly: true },
+        },
+        {
+          name: "value",
+          label: "Published Text",
+          type: "string",
+          ui: { component: "textarea" },
+        },
+      ],
+    },
+    {
+      name: "authorityImages",
+      label: "Visible Images",
+      type: "object",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item.alt || item.source || "Image" }),
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo Image",
+          type: "string",
+          ui: { readonly: true },
+        },
+        { name: "url", label: "Published Image", type: "image" },
+        { name: "alt", label: "Alt Text", type: "string" },
+      ],
+    },
+    {
+      name: "authorityLinks",
+      label: "Visible Links",
+      type: "object",
+      list: true,
+      ui: {
+        itemProps: (item) => ({ label: item.label || item.href || "Link" }),
+      },
+      fields: [
+        {
+          name: "source",
+          label: "Original Demo URL",
+          type: "string",
+          ui: { readonly: true },
+        },
+        { name: "href", label: "Published URL", type: "string" },
+        { name: "label", label: "Internal Label", type: "string" },
+      ],
+    },
+    { name: "authorityUpdatedDate", label: "Last Updated", type: "datetime" },
+    {
+      name: "authoritySections",
+      label: "Editorial Page Sections",
+      type: "object",
+      list: true,
+      ui: { itemProps: (item) => ({ label: item.heading || "Section" }) },
+      fields: [
+        { name: "heading", label: "Heading", type: "string" },
+        {
+          name: "body",
+          label: "Body",
+          type: "string",
+          ui: { component: "textarea" },
+        },
+      ],
+    },
+    {
+      type: "object",
+      list: true,
+      name: "blocks",
+      label: "Page Sections",
       description:
         "The visible content of the page. When the page starts with a Hero block, its Headline is the main on-page heading â€” edit that to change what visitors see at the top.",
       ui: { visualSelector: true },

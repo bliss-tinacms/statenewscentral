@@ -1,41 +1,25 @@
 ---
-import Blocks from '../blocks/Blocks.astro';
+import DemoStaticFragment from '../state-news/DemoStaticFragment.astro';
+import EditorialPage from '../state-news/EditorialPage.astro';
+import SitemapPage from '../state-news/SitemapPage.astro';
 import FrontPage from '../../templates/FrontPage.astro';
-import { getConfig, listBlogs } from '../../lib/data';
-import DemoAboutPage from '../demo/DemoAboutPage.astro';
-import DemoContactPage from '../demo/DemoContactPage.astro';
-import DemoOurTeamPage from '../demo/DemoOurTeamPage.astro';
-import DemoPageTemplate from '../demo/DemoPageTemplate.astro';
-
+import { getConfig } from '../../lib/data';
 const { data, config = null } = Astro.props;
-const pageBlocks: any[] = Array.isArray(data?.blocks) ? data.blocks : [];
-const homepageTemplateBlock = pageBlocks.find((block: any) => block?._template === 'homepageTemplate' || block?.__typename === 'PageBlocksHomepageTemplate');
-const filename = data?._sys?.filename || '';
-const permalink = String(data?.permalink || '').replace(/^\/+|\/+$/g, '');
-const isHomePage = Boolean(filename === 'home' || data?.permalink === '/' || homepageTemplateBlock);
-const isAboutPage = filename === 'about' || permalink === 'about';
-const isContactPage = filename === 'contact' || permalink === 'contact';
-const isTeamPage = filename === 'our-team' || permalink === 'our-team';
-const frontPageData = data;
-const frontPagePosts = isHomePage ? await listBlogs() : [];
-const frontPageConfig = isHomePage ? ((await getConfig()).data?.config ?? config) : config;
-const isGenericDemoPage = Boolean(data && !isHomePage && !isAboutPage && !isContactPage && !isTeamPage);
+const currentConfig = config || (await getConfig()).data?.config || null;
+const filename = String(data?._sys?.filename || '').toLowerCase();
+const permalink = String(data?.permalink || '').replace(/^\/+|\/+$/g,'').toLowerCase();
+const key = filename || permalink;
+const isHome = key === 'home' || data?.permalink === '/';
+let template = 'page';
+if (['about','about-us'].includes(key)) template = 'about';
+else if (['our-team','team'].includes(key)) template = 'team';
+else if (['contact','contact-us'].includes(key)) template = 'contact';
+else if (key === 'sitemap') template = 'sitemap';
 ---
-
-{data && (
-  <>
-    {isHomePage ? (
-      <FrontPage posts={frontPagePosts} config={frontPageConfig} data={frontPageData} editData={data} />
-    ) : isAboutPage ? (
-      <DemoAboutPage data={data} />
-    ) : isContactPage ? (
-      <DemoContactPage data={data} config={config} />
-    ) : isTeamPage ? (
-      <DemoOurTeamPage data={data} />
-    ) : isGenericDemoPage ? (
-      <DemoPageTemplate data={data} />
-    ) : (
-      <Blocks data={data} config={config} />
-    )}
-  </>
-)}
+{data && (isHome
+  ? <FrontPage data={data} editData={data} config={currentConfig} posts={[]} />
+  : template === 'sitemap'
+    ? <SitemapPage data={data} />
+    : template === 'page' && data?.authoritySections?.length
+      ? <EditorialPage data={data} />
+      : <DemoStaticFragment template={template} data={data} config={currentConfig} />)}

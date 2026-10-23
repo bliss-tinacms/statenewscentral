@@ -1,24 +1,13 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
-import { getBlogPermalink } from '../../lib/permalinks';
-import { labelFromReference, getPostCategories } from './DemoHelpers';
-const { archiveTitle = 'Author', author = null, posts = [], currentPage = 1, totalPages = 1, basePath = '/author' } = Astro.props;
-function postUrl(post: any) { const url = getBlogPermalink(post); return url.endsWith('/') ? url : url + '/'; }
-function pagePath(page: number) { return page <= 1 ? basePath + '/' : basePath + '/page/' + page + '/'; }
-const bio = author?.bio || `${archiveTitle} writes and edits coverage for Starter Site.`;
-const avatar = author?.avatar || '';
-const role = author?.role || '';
+import DemoCategoryArchive from './DemoCategoryArchive.astro';
+const { archiveTitle='Author', author=null, posts=[], currentPage=1, totalPages=1, basePath='/' }=Astro.props;
+const role=author?.role||'Contributor';
+const location=author?.location||'';
 ---
-
-<main class="ffn-demo ffn-demo-author">
-  <header class="ah"><div class="w"><div class="ah-in">
-    {avatar ? <img class="ah-img" src={avatar} alt={archiveTitle} data-tina-field={author ? tinaField(author, 'avatar') : undefined} /> : <div class="ah-img demo-img"></div>}
-    <div><div class="ah-k"><b>Author</b></div><h1 data-tina-field={author ? tinaField(author, 'name') : undefined}>{archiveTitle}</h1>{role && <div class="ah-r" data-tina-field={author ? tinaField(author, 'role') : undefined}>{role}</div>}<p class="ah-b" data-tina-field={author ? tinaField(author, 'bio') : undefined}>{bio}</p></div>
-  </div></div></header>
-  <section class="lg"><div class="w"><div class="lg-h"><div class="eye"><i></i><span>Most recent first</span></div><div class="h2">Stories by {archiveTitle}</div></div>
-    <div>
-      {posts.map((post: any) => <a href={postUrl(post)} class="si">{post.heroImage ? <img class="si-img" src={post.heroImage} alt="" /> : <div class="si-img demo-img"></div>}<div><div class="si-k">{labelFromReference(getPostCategories(post))}</div><div class="si-h">{post.title}</div>{post.description && <p class="si-x">{post.description}</p>}</div></a>)}
-    </div>
-  </div></section>
-  {totalPages > 1 && <nav class="pg" aria-label="Archive pagination"><div class="w"><a class="nx" href={pagePath(Math.max(1,currentPage-1))}>Prev</a>{Array.from({ length: Math.min(totalPages, 3) }).map((_, i) => { const p=i+1; return <a class={p===currentPage?'on':''} href={pagePath(p)}>{p}</a>; })}<span class="gap">…</span><a class="nx" href={pagePath(Math.min(totalPages,currentPage+1))}>Next →</a></div></nav>}
-</main>
+<section style="background:#f1f6f2"><div style="max-width:1320px;margin:0 auto;padding:clamp(44px,6vw,88px) clamp(16px,3vw,32px);display:grid;grid-template-columns:minmax(160px,260px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center" class="snd-author-hero">
+  <div>{author?.avatar&&<img src={author.avatar} alt={archiveTitle} data-tina-field={tinaField(author,'avatar')} style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:28px"/>}</div>
+  <div style="display:flex;flex-direction:column;gap:14px"><span style="color:#1e6b4f;font-weight:700;font-size:15px">{role}</span><h1 data-tina-field={tinaField(author,'name')} style="font-family:'Young Serif',serif;font-size:clamp(44px,5.6vw,80px);font-weight:400;line-height:1.04;letter-spacing:-.03em;margin:0;color:#17392c">{archiveTitle}</h1>{author?.bio&&<p data-tina-field={tinaField(author,'bio')} style="max-width:780px;margin:0;font-size:18px;line-height:1.7;color:#2c4238">{author.bio}</p>}{location&&<span style="font-size:15px;color:#5b6e64">{location}</span>}</div>
+</div></section>
+<DemoCategoryArchive showHeading={false} archiveTitle={archiveTitle} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
+<style>@media(max-width:700px){.snd-author-hero{grid-template-columns:1fr!important}.snd-author-hero>div:first-child{max-width:220px}}</style>

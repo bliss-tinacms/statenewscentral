@@ -1,0 +1,13 @@
+{
+  "title": "Technology",
+  "description": "How new tools change the way people live and work.",
+  "shortDescription": "How new tools change the way people live and work.",
+  "displayOrder": 7,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Technology | State News Digest",
+    "metaDescription": "How new tools change the way people live and work.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

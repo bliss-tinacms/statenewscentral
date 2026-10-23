@@ -71,6 +71,45 @@ export const GlobalConfigCollection: Collection = {
       ],
     },
     {
+      name: "contributorCta",
+      label: "Contributor CTA",
+      type: "object",
+      fields: [
+        { name: "eyebrow", label: "Eyebrow", type: "string" },
+        { name: "title", label: "Title", type: "string" },
+        { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
+        { name: "buttonText", label: "Button Text", type: "string" },
+        { name: "buttonLink", label: "Button Link", type: "string" },
+      ],
+    },
+    {
+      name: "footer",
+      label: "Footer",
+      type: "object",
+      fields: [{ name: "copyrightText", label: "Copyright Text", type: "string" }],
+    },
+    {
+      name: "notFound",
+      label: "404 Page",
+      type: "object",
+      fields: [
+        { name: "title", label: "Title", type: "string" },
+        { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
+        { name: "buttonText", label: "Button Text", type: "string" },
+        { name: "buttonLink", label: "Button Link", type: "string" },
+        {
+          name: "quickLinks",
+          label: "Quick Links",
+          type: "object",
+          list: true,
+          fields: [
+            { name: "label", label: "Label", type: "string" },
+            { name: "href", label: "URL", type: "string" },
+          ],
+        },
+      ],
+    },
+    {
       name: "codeInjection",
       label: "Code Injection",
       type: "object",

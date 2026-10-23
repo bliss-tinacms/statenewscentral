@@ -123,6 +123,7 @@ type Blog implements Node & Document {
   seo: BlogSeo
   pubDate: String
   updatedDate: String
+  readTime: String
   categories: [String]
   author: BlogAuthor
   heroImage: String
@@ -192,6 +193,7 @@ input BlogFilter {
   seo: BlogSeoFilter
   pubDate: DatetimeFilter
   updatedDate: DatetimeFilter
+  readTime: StringFilter
   categories: StringFilter
   author: BlogAuthorFilter
   heroImage: ImageFilter
@@ -225,10 +227,23 @@ type CategorySeo {
 type Category implements Node & Document {
   title: String!
   description: String
+  shortDescription: String
+  displayOrder: Float
+  showOnHome: Boolean
   seo: CategorySeo
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
+}
+
+input NumberFilter {
+  lt: Float
+  lte: Float
+  gte: Float
+  gt: Float
+  eq: Float
+  exists: Boolean
+  in: [Float]
 }
 
 input CategorySeoFilter {
@@ -245,6 +260,9 @@ input CategorySeoFilter {
 input CategoryFilter {
   title: StringFilter
   description: StringFilter
+  shortDescription: StringFilter
+  displayOrder: NumberFilter
+  showOnHome: BooleanFilter
   seo: CategorySeoFilter
 }
 
@@ -268,6 +286,28 @@ type PageSeo {
   canonicalUrl: String
   noindex: Boolean
   nofollow: Boolean
+}
+
+type PageAuthorityText {
+  source: String
+  value: String
+}
+
+type PageAuthorityImages {
+  source: String
+  url: String
+  alt: String
+}
+
+type PageAuthorityLinks {
+  source: String
+  href: String
+  label: String
+}
+
+type PageAuthoritySections {
+  heading: String
+  body: String
 }
 
 type PageBlocksHomepageTemplateHero {
@@ -630,6 +670,12 @@ type Page implements Node & Document {
   title: String!
   permalink: String
   seo: PageSeo
+  authorityTemplate: String
+  authorityText: [PageAuthorityText]
+  authorityImages: [PageAuthorityImages]
+  authorityLinks: [PageAuthorityLinks]
+  authorityUpdatedDate: String
+  authoritySections: [PageAuthoritySections]
   blocks: [PageBlocks]
   id: ID!
   _sys: SystemInfo!
@@ -645,6 +691,28 @@ input PageSeoFilter {
   canonicalUrl: StringFilter
   noindex: BooleanFilter
   nofollow: BooleanFilter
+}
+
+input PageAuthorityTextFilter {
+  source: StringFilter
+  value: StringFilter
+}
+
+input PageAuthorityImagesFilter {
+  source: StringFilter
+  url: ImageFilter
+  alt: StringFilter
+}
+
+input PageAuthorityLinksFilter {
+  source: StringFilter
+  href: StringFilter
+  label: StringFilter
+}
+
+input PageAuthoritySectionsFilter {
+  heading: StringFilter
+  body: StringFilter
 }
 
 input PageBlocksHomepageTemplateHeroFilter {
@@ -1027,6 +1095,12 @@ input PageFilter {
   title: StringFilter
   permalink: StringFilter
   seo: PageSeoFilter
+  authorityTemplate: StringFilter
+  authorityText: PageAuthorityTextFilter
+  authorityImages: PageAuthorityImagesFilter
+  authorityLinks: PageAuthorityLinksFilter
+  authorityUpdatedDate: DatetimeFilter
+  authoritySections: PageAuthoritySectionsFilter
   blocks: PageBlocksFilter
 }
 
@@ -1058,6 +1132,10 @@ type User implements Node & Document {
   avatar: String
   bio: String
   email: String
+  location: String
+  teamGroup: String
+  teamOrder: Float
+  showOnTeam: Boolean
   seo: UserSeo
   id: ID!
   _sys: SystemInfo!
@@ -1081,6 +1159,10 @@ input UserFilter {
   avatar: ImageFilter
   bio: StringFilter
   email: StringFilter
+  location: StringFilter
+  teamGroup: StringFilter
+  teamOrder: NumberFilter
+  showOnTeam: BooleanFilter
   seo: UserSeoFilter
 }
 
@@ -1163,6 +1245,31 @@ type ConfigContactForm {
   subject: String
 }
 
+type ConfigContributorCta {
+  eyebrow: String
+  title: String
+  description: String
+  buttonText: String
+  buttonLink: String
+}
+
+type ConfigFooter {
+  copyrightText: String
+}
+
+type ConfigNotFoundQuickLinks {
+  label: String
+  href: String
+}
+
+type ConfigNotFound {
+  title: String
+  description: String
+  buttonText: String
+  buttonLink: String
+  quickLinks: [ConfigNotFoundQuickLinks]
+}
+
 type ConfigCodeInjection {
   headerCode: String
   footerCode: String
@@ -1180,6 +1287,9 @@ type Config implements Node & Document {
   favicon: String
   seo: ConfigSeo
   contactForm: ConfigContactForm
+  contributorCta: ConfigContributorCta
+  footer: ConfigFooter
+  notFound: ConfigNotFound
   codeInjection: ConfigCodeInjection
   contactLinks: [ConfigContactLinks]
   footerStarfield: Boolean
@@ -1214,6 +1324,31 @@ input ConfigContactFormFilter {
   subject: StringFilter
 }
 
+input ConfigContributorCtaFilter {
+  eyebrow: StringFilter
+  title: StringFilter
+  description: StringFilter
+  buttonText: StringFilter
+  buttonLink: StringFilter
+}
+
+input ConfigFooterFilter {
+  copyrightText: StringFilter
+}
+
+input ConfigNotFoundQuickLinksFilter {
+  label: StringFilter
+  href: StringFilter
+}
+
+input ConfigNotFoundFilter {
+  title: StringFilter
+  description: StringFilter
+  buttonText: StringFilter
+  buttonLink: StringFilter
+  quickLinks: ConfigNotFoundQuickLinksFilter
+}
+
 input ConfigCodeInjectionFilter {
   headerCode: StringFilter
   footerCode: StringFilter
@@ -1231,6 +1366,9 @@ input ConfigFilter {
   favicon: ImageFilter
   seo: ConfigSeoFilter
   contactForm: ConfigContactFormFilter
+  contributorCta: ConfigContributorCtaFilter
+  footer: ConfigFooterFilter
+  notFound: ConfigNotFoundFilter
   codeInjection: ConfigCodeInjectionFilter
   contactLinks: ConfigContactLinksFilter
   footerStarfield: BooleanFilter
@@ -1305,6 +1443,7 @@ input BlogMutation {
   seo: BlogSeoMutation
   pubDate: String
   updatedDate: String
+  readTime: String
   categories: [String]
   author: String
   heroImage: String
@@ -1327,6 +1466,9 @@ input CategorySeoMutation {
 input CategoryMutation {
   title: String
   description: String
+  shortDescription: String
+  displayOrder: Float
+  showOnHome: Boolean
   seo: CategorySeoMutation
 }
 
@@ -1339,6 +1481,28 @@ input PageSeoMutation {
   canonicalUrl: String
   noindex: Boolean
   nofollow: Boolean
+}
+
+input PageAuthorityTextMutation {
+  source: String
+  value: String
+}
+
+input PageAuthorityImagesMutation {
+  source: String
+  url: String
+  alt: String
+}
+
+input PageAuthorityLinksMutation {
+  source: String
+  href: String
+  label: String
+}
+
+input PageAuthoritySectionsMutation {
+  heading: String
+  body: String
 }
 
 input PageBlocksHomepageTemplateHeroMutation {
@@ -1715,6 +1879,12 @@ input PageMutation {
   title: String
   permalink: String
   seo: PageSeoMutation
+  authorityTemplate: String
+  authorityText: [PageAuthorityTextMutation]
+  authorityImages: [PageAuthorityImagesMutation]
+  authorityLinks: [PageAuthorityLinksMutation]
+  authorityUpdatedDate: String
+  authoritySections: [PageAuthoritySectionsMutation]
   blocks: [PageBlocksMutation]
 }
 
@@ -1735,6 +1905,10 @@ input UserMutation {
   avatar: String
   bio: String
   email: String
+  location: String
+  teamGroup: String
+  teamOrder: Float
+  showOnTeam: Boolean
   seo: UserSeoMutation
 }
 
@@ -1772,6 +1946,31 @@ input ConfigContactFormMutation {
   subject: String
 }
 
+input ConfigContributorCtaMutation {
+  eyebrow: String
+  title: String
+  description: String
+  buttonText: String
+  buttonLink: String
+}
+
+input ConfigFooterMutation {
+  copyrightText: String
+}
+
+input ConfigNotFoundQuickLinksMutation {
+  label: String
+  href: String
+}
+
+input ConfigNotFoundMutation {
+  title: String
+  description: String
+  buttonText: String
+  buttonLink: String
+  quickLinks: [ConfigNotFoundQuickLinksMutation]
+}
+
 input ConfigCodeInjectionMutation {
   headerCode: String
   footerCode: String
@@ -1789,6 +1988,9 @@ input ConfigMutation {
   favicon: String
   seo: ConfigSeoMutation
   contactForm: ConfigContactFormMutation
+  contributorCta: ConfigContributorCtaMutation
+  footer: ConfigFooterMutation
+  notFound: ConfigNotFoundMutation
   codeInjection: ConfigCodeInjectionMutation
   contactLinks: [ConfigContactLinksMutation]
   footerStarfield: Boolean

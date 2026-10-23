@@ -27,6 +27,9 @@ export const CategoryCollection: Collection = {
         component: "textarea",
       },
     },
+    { type: "string", name: "shortDescription", label: "Short Description" },
+    { type: "number", name: "displayOrder", label: "Display Order" },
+    { type: "boolean", name: "showOnHome", label: "Show on Homepage" },
     seoFields,
   ],
 };

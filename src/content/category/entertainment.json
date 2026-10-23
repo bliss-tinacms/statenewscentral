@@ -1,0 +1,13 @@
+{
+  "title": "Entertainment",
+  "description": "Film, television, music, and the culture around them.",
+  "shortDescription": "Film, television, music, and the culture around them.",
+  "displayOrder": 4,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Entertainment | State News Digest",
+    "metaDescription": "Film, television, music, and the culture around them.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

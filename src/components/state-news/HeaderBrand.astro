@@ -1,0 +1,11 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import assets from '../../data/state-news-demo-assets.json';
+const { config } = Astro.props;
+const seo = config?.seo ?? {};
+const siteTitle = seo.title || 'State News Digest';
+const logo = seo.logo || assets.logo;
+---
+<a href="/" class="snd-header__logo" aria-label={`${siteTitle} home`}>
+  <img src={logo} alt={siteTitle} data-tina-field={seo ? tinaField(seo, 'logo') : undefined} />
+</a>

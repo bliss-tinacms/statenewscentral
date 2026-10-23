@@ -1,0 +1,17 @@
+{
+  "name": "Wayne Harper",
+  "role": "Standards Editor",
+  "avatar": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703209/statenewscentral/1953a4110f7b7d4d.jpg",
+  "bio": "Wayne oversees the publication’s standards program from Carson City, Nevada. He handles fact-checking on sensitive material and manages the corrections record.",
+  "email": "editorial@statenewsdigest.com",
+  "location": "Carson City, Nevada",
+  "teamGroup": "Senior Editors",
+  "teamOrder": 5,
+  "showOnTeam": true,
+  "seo": {
+    "metaTitle": "Wayne Harper | State News Digest",
+    "metaDescription": "Wayne oversees the publication’s standards program from Carson City, Nevada. He handles fact-checking on sensitive material and manages the corrections rec",
+    "noindex": false,
+    "nofollow": false
+  }
+}

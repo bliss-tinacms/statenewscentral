@@ -1,0 +1,31 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+const { navigation } = Astro.props;
+const items = (navigation?.items || []).filter((item:any) => item?.label && item?.href);
+---
+<div class="snd-header__nav-wrap">
+  <button class="snd-menu" type="button" aria-label="Menu" aria-expanded="false">Menu</button>
+  <nav class="snd-header__nav snd-header__desktop" aria-label={navigation?.title || 'Primary navigation'}>
+    {items.map((item:any) => <a class="scp0" href={item.href} data-tina-field={tinaField(item,'label')}>{item.label}</a>)}
+  </nav>
+  <nav class="snd-mobile-nav" aria-label="Mobile navigation">
+    {items.map((item:any) => <a class="scp0" href={item.href} data-tina-field={tinaField(item,'label')}>{item.label}</a>)}
+  </nav>
+</div>
+<script is:inline>
+(() => {
+  const bind = () => document.querySelectorAll('.snd-header').forEach((header) => {
+    if (header.dataset.menuBound) return;
+    header.dataset.menuBound = '1';
+    const button = header.querySelector('.snd-menu');
+    if (!button) return;
+    button.addEventListener('click', () => {
+      const open = !header.classList.contains('is-open');
+      header.classList.toggle('is-open', open);
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+      button.textContent = open ? 'Close' : 'Menu';
+    });
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
+})();
+</script>

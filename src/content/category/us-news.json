@@ -1,0 +1,13 @@
+{
+  "title": "US News",
+  "description": "National developments and the state stories behind them.",
+  "shortDescription": "National developments and the state stories behind them.",
+  "displayOrder": 1,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "US News | State News Digest",
+    "metaDescription": "National developments and the state stories behind them.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

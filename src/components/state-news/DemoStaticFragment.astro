@@ -1,0 +1,50 @@
+---
+import indexHtml from '../../data/demo-html/index.html?raw';
+import aboutHtml from '../../data/demo-html/about.html?raw';
+import teamHtml from '../../data/demo-html/team.html?raw';
+import contactHtml from '../../data/demo-html/contact.html?raw';
+import pageHtml from '../../data/demo-html/page.html?raw';
+import sitemapHtml from '../../data/demo-html/sitemap.html?raw';
+import notFoundHtml from '../../data/demo-html/404.html?raw';
+
+const { template = 'page', data = null, config = null } = Astro.props;
+const templates:Record<string,string> = { index:indexHtml, about:aboutHtml, team:teamHtml, contact:contactHtml, page:pageHtml, sitemap:sitemapHtml, '404':notFoundHtml };
+const selectedTemplate = data?.authorityTemplate || template;
+let html = templates[selectedTemplate] || pageHtml;
+const blocks = Array.isArray(data?.blocks) ? data.blocks : [];
+const home = blocks.find((b:any) => b?._template === 'homepageTemplate' || b?.__typename === 'PageBlocksHomepageTemplate') || {};
+const escapeHtml = (value:any) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const replace = (before:string, after:any) => { if (after !== null && after !== undefined && String(after).trim()) html = html.split(before).join(escapeHtml(after)); };
+
+replace('State News Digest', config?.seo?.title || 'State News Digest');
+if (selectedTemplate === 'index') {
+  replace('A clearer view of the news.', home?.hero?.title);
+  replace('Keeping up with the news should leave you with a clearer understanding of the world — not a longer list of things to worry about.', home?.hero?.description);
+  replace('Explore our coverage', home?.hero?.buttonText);
+}
+if (selectedTemplate === 'about') replace('About State News Digest', data?.title);
+if (selectedTemplate === 'team') replace('Our team', data?.title);
+if (selectedTemplate === 'contact') {
+  replace('Contact us', data?.title);
+  const endpoint = config?.contactForm?.formspreeEndpoint || import.meta.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/xljjrvrw';
+  html = html.replace('<form ', `<form action="${escapeHtml(endpoint)}" method="POST" `);
+  html = html.replace('</form>', `<input type="hidden" name="_subject" value="${escapeHtml(config?.contactForm?.subject || 'State News Digest website inquiry')}"></form>`);
+}
+if (selectedTemplate === 'page') replace('Editorial Guidelines', data?.title);
+if (selectedTemplate === '404') {
+  replace('This page could not be found.', config?.notFound?.title);
+  replace('The link may be outdated, or the page may have moved. Try one of the sections below to keep reading.', config?.notFound?.description);
+  replace('Back to Homepage', config?.notFound?.buttonText);
+  if (config?.notFound?.buttonLink) html = html.replace('href="#"', `href="${escapeHtml(config.notFound.buttonLink)}"`);
+}
+for (const item of data?.authorityText || []) replace(escapeHtml(item?.source), item?.value);
+for (const item of data?.authorityImages || []) {
+  if (!item?.source || !item?.url) continue;
+  html = html.split(escapeHtml(item.source)).join(escapeHtml(item.url));
+}
+for (const item of data?.authorityLinks || []) {
+  if (!item?.source || !item?.href) continue;
+  html = html.split(`href="${escapeHtml(item.source)}"`).join(`href="${escapeHtml(item.href)}"`);
+}
+---
+<Fragment set:html={html} />

@@ -1,36 +1,16 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
 import { getBlogPermalink } from '../../lib/permalinks';
-import { labelFromReference, getAuthorName, getPostCategories } from './DemoHelpers';
-const { archiveTitle = 'Category', posts = [], currentPage = 1, totalPages = 1, basePath = '/', category = null, showCategoryBadge = true } = Astro.props;
-const lead = posts[0];
-const rest = posts.slice(1);
-const hasPosts = posts.length > 0;
-const hasBottomPosts = rest.length > 0;
-function postUrl(post: any) { const url = getBlogPermalink(post); return url.endsWith('/') ? url : url + '/'; }
-function pagePath(page: number) { return page <= 1 ? basePath + '/' : basePath + '/page/' + page + '/'; }
-const emptyHeadline = hasPosts ? `No more articles in ${archiveTitle} yet.` : `There are no articles published yet under ${archiveTitle}.`;
-const emptyBody = hasPosts
-  ? 'There are no additional articles published yet under this category. Please check back soon for new coverage.'
-  : 'There are no articles published yet under this category. Please check back soon for new coverage.';
+const { archiveTitle='Category', posts=[], currentPage=1, totalPages=1, basePath='/', category=null, showHeading=true }=Astro.props;
+const clean=(v:string)=>v.endsWith('/')?v:v+'/';
+const postUrl=(p:any)=>clean(getBlogPermalink(p));
+const pagePath=(p:number)=>p<=1?clean(basePath):clean(`${basePath}/page/${p}`);
 ---
-
-<main class="ffn-demo ffn-demo-category">
-  <header class="ch"><div class="w"><div class="ch-in">{showCategoryBadge && <div class="ch-k"><b>Category</b></div>}<h1 data-tina-field={category ? tinaField(category, 'title') : undefined}>{archiveTitle}</h1></div></div></header>
-  {lead && (
-    <section class="ld"><div class="w"><a href={postUrl(lead)} class="ld-a">
-      {lead.heroImage ? <div class="ld-img" style={`background-image:url(${lead.heroImage})`}></div> : <div class="ld-img demo-img"></div>}
-      <div class="ld-c"><span class="ld-k">Lead Story</span><div class="ld-h">{lead.title}</div>{lead.description && <p class="ld-x">{lead.description}</p>}<div class="ld-b">{getAuthorName(lead.author)} · {labelFromReference(getPostCategories(lead), archiveTitle)}</div></div>
-    </a></div></section>
-  )}
-  <section class="lg"><div class="w"><div class="lg-h"><div class="eye"><i></i><span>{hasPosts ? 'Most recent first' : 'No articles yet'}</span></div><div class="h2">{hasPosts ? `More in ${archiveTitle}` : emptyHeadline}</div></div>
-    {hasBottomPosts ? (
-      <div>
-        {rest.map((post: any) => <a href={postUrl(post)} class="si">{post.heroImage ? <img class="si-img" src={post.heroImage} alt="" /> : <div class="si-img demo-img"></div>}<div><div class="si-k">{labelFromReference(getPostCategories(post), archiveTitle)}</div><div class="si-h">{post.title}</div>{post.description && <p class="si-x">{post.description}</p>}<div class="si-b">{getAuthorName(post.author)}</div></div></a>)}
-      </div>
-    ) : (
-      <div class="empty-archive"><p>{emptyBody}</p><a href="/" class="empty-archive__link">Back to the homepage</a></div>
-    )}
-  </div></section>
-  {totalPages > 1 && <nav class="pg" aria-label="Archive pagination"><div class="w"><a class="nx" href={pagePath(Math.max(1,currentPage-1))}>Prev</a>{Array.from({ length: Math.min(totalPages, 4) }).map((_, i) => { const p=i+1; return <a class={p===currentPage?'on':''} href={pagePath(p)}>{p}</a>; })}<span class="gap">…</span><a class="nx" href={pagePath(Math.min(totalPages,currentPage+1))}>Next →</a></div></nav>}
-</main>
+{showHeading && <section style="background:#f1f6f2"><div style="max-width:1320px;margin:0 auto;padding:clamp(40px,6vw,88px) clamp(16px,3vw,32px) clamp(40px,6vw,80px);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px clamp(40px,6vw,88px)"><div style="width:100%;min-width:0"><h1 data-tina-field={category?tinaField(category,'title'):undefined} style="font-family:'Young Serif',serif;font-weight:400;font-size:clamp(44px,5.6vw,80px);line-height:1.04;letter-spacing:-.03em;margin:0;color:#17392c;width:100%">{archiveTitle}</h1></div></div></section>}
+<section style="max-width:1320px;margin:0 auto;padding-left:clamp(16px,3vw,32px);padding-right:clamp(16px,3vw,32px);padding-top:clamp(48px,6vw,80px)">
+  {posts.length ? <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(36px,4vw,52px) 28px">
+    {posts.map((post:any)=><a href={postUrl(post)} class="scp0" style="display:flex;flex-direction:column;gap:14px;color:#17392c">{post.heroImage&&<img src={post.heroImage} alt={post.heroImageAlt||post.title||''} style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:24px"/>}<span style="font-family:'Young Serif',serif;font-weight:400;font-size:24px;line-height:1.25;color:inherit;text-wrap:pretty">{post.title}</span></a>)}
+  </div> : <p style="font-size:20px;line-height:1.7;color:#2c4238">There are no articles published yet under {archiveTitle}.</p>}
+</section>
+{totalPages>1&&<nav aria-label="Archive pagination" style="max-width:1320px;margin:48px auto 0;padding:0 clamp(16px,3vw,32px);display:flex;gap:12px">{Array.from({length:totalPages}).map((_,i)=>{const p=i+1;return <a href={pagePath(p)} aria-current={p===currentPage?'page':undefined} style={`padding:10px 15px;border-radius:999px;background:${p===currentPage?'#1e6b4f':'#f1f6f2'};color:${p===currentPage?'#fff':'#17392c'}`}>{p}</a>})}</nav>}
+<section style="background:#f1f6f2;margin-top:clamp(64px,8vw,112px)"><div style="max-width:1320px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(16px,3vw,32px);display:flex;flex-wrap:wrap;gap:24px clamp(32px,6vw,96px);align-items:center"><div style="flex:1 1 420px;display:flex;flex-direction:column;gap:14px"><div style="align-self:flex-start;display:inline-flex;background:#f1f6f2;color:#1e6b4f;padding:7px 14px;border-radius:999px;font-weight:700;font-size:14px;letter-spacing:.02em">Write for us</div><h2 style="font-family:'Young Serif',serif;font-weight:400;font-size:clamp(32px,3.8vw,52px);line-height:1.08;letter-spacing:-.02em;margin:0;color:#17392c;text-wrap:balance">Have a story worth telling?</h2></div><div style="flex:1 1 420px;display:flex;flex-direction:column;gap:22px"><p style="margin:0;font-size:18px;line-height:1.7;color:#2c4238;text-wrap:pretty">State News Digest accepts work from outside contributors — freelance journalists, working professionals with substantive expertise, and academics whose work translates for a general readership.</p><a href="/write-for-us/" class="scp1" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;background:#1e6b4f;color:#fff;padding:17px 30px;border-radius:999px;font-weight:700;font-size:17px">Write for Us <span>→</span></a></div></div></section>

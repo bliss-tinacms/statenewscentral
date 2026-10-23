@@ -277,6 +277,7 @@ export type Blog = Node & Document & {
   seo?: Maybe<BlogSeo>;
   pubDate?: Maybe<Scalars['String']['output']>;
   updatedDate?: Maybe<Scalars['String']['output']>;
+  readTime?: Maybe<Scalars['String']['output']>;
   categories?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   author?: Maybe<BlogAuthor>;
   heroImage?: Maybe<Scalars['String']['output']>;
@@ -346,6 +347,7 @@ export type BlogFilter = {
   seo?: InputMaybe<BlogSeoFilter>;
   pubDate?: InputMaybe<DatetimeFilter>;
   updatedDate?: InputMaybe<DatetimeFilter>;
+  readTime?: InputMaybe<StringFilter>;
   categories?: InputMaybe<StringFilter>;
   author?: InputMaybe<BlogAuthorFilter>;
   heroImage?: InputMaybe<ImageFilter>;
@@ -383,10 +385,23 @@ export type Category = Node & Document & {
   __typename?: 'Category';
   title: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
+  shortDescription?: Maybe<Scalars['String']['output']>;
+  displayOrder?: Maybe<Scalars['Float']['output']>;
+  showOnHome?: Maybe<Scalars['Boolean']['output']>;
   seo?: Maybe<CategorySeo>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
+};
+
+export type NumberFilter = {
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  eq?: InputMaybe<Scalars['Float']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
 };
 
 export type CategorySeoFilter = {
@@ -403,6 +418,9 @@ export type CategorySeoFilter = {
 export type CategoryFilter = {
   title?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
+  shortDescription?: InputMaybe<StringFilter>;
+  displayOrder?: InputMaybe<NumberFilter>;
+  showOnHome?: InputMaybe<BooleanFilter>;
   seo?: InputMaybe<CategorySeoFilter>;
 };
 
@@ -429,6 +447,32 @@ export type PageSeo = {
   canonicalUrl?: Maybe<Scalars['String']['output']>;
   noindex?: Maybe<Scalars['Boolean']['output']>;
   nofollow?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PageAuthorityText = {
+  __typename?: 'PageAuthorityText';
+  source?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageAuthorityImages = {
+  __typename?: 'PageAuthorityImages';
+  source?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  alt?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageAuthorityLinks = {
+  __typename?: 'PageAuthorityLinks';
+  source?: Maybe<Scalars['String']['output']>;
+  href?: Maybe<Scalars['String']['output']>;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageAuthoritySections = {
+  __typename?: 'PageAuthoritySections';
+  heading?: Maybe<Scalars['String']['output']>;
+  body?: Maybe<Scalars['String']['output']>;
 };
 
 export type PageBlocksHomepageTemplateHero = {
@@ -843,6 +887,12 @@ export type Page = Node & Document & {
   title: Scalars['String']['output'];
   permalink?: Maybe<Scalars['String']['output']>;
   seo?: Maybe<PageSeo>;
+  authorityTemplate?: Maybe<Scalars['String']['output']>;
+  authorityText?: Maybe<Array<Maybe<PageAuthorityText>>>;
+  authorityImages?: Maybe<Array<Maybe<PageAuthorityImages>>>;
+  authorityLinks?: Maybe<Array<Maybe<PageAuthorityLinks>>>;
+  authorityUpdatedDate?: Maybe<Scalars['String']['output']>;
+  authoritySections?: Maybe<Array<Maybe<PageAuthoritySections>>>;
   blocks?: Maybe<Array<Maybe<PageBlocks>>>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -858,6 +908,28 @@ export type PageSeoFilter = {
   canonicalUrl?: InputMaybe<StringFilter>;
   noindex?: InputMaybe<BooleanFilter>;
   nofollow?: InputMaybe<BooleanFilter>;
+};
+
+export type PageAuthorityTextFilter = {
+  source?: InputMaybe<StringFilter>;
+  value?: InputMaybe<StringFilter>;
+};
+
+export type PageAuthorityImagesFilter = {
+  source?: InputMaybe<StringFilter>;
+  url?: InputMaybe<ImageFilter>;
+  alt?: InputMaybe<StringFilter>;
+};
+
+export type PageAuthorityLinksFilter = {
+  source?: InputMaybe<StringFilter>;
+  href?: InputMaybe<StringFilter>;
+  label?: InputMaybe<StringFilter>;
+};
+
+export type PageAuthoritySectionsFilter = {
+  heading?: InputMaybe<StringFilter>;
+  body?: InputMaybe<StringFilter>;
 };
 
 export type PageBlocksHomepageTemplateHeroFilter = {
@@ -1240,6 +1312,12 @@ export type PageFilter = {
   title?: InputMaybe<StringFilter>;
   permalink?: InputMaybe<StringFilter>;
   seo?: InputMaybe<PageSeoFilter>;
+  authorityTemplate?: InputMaybe<StringFilter>;
+  authorityText?: InputMaybe<PageAuthorityTextFilter>;
+  authorityImages?: InputMaybe<PageAuthorityImagesFilter>;
+  authorityLinks?: InputMaybe<PageAuthorityLinksFilter>;
+  authorityUpdatedDate?: InputMaybe<DatetimeFilter>;
+  authoritySections?: InputMaybe<PageAuthoritySectionsFilter>;
   blocks?: InputMaybe<PageBlocksFilter>;
 };
 
@@ -1275,6 +1353,10 @@ export type User = Node & Document & {
   avatar?: Maybe<Scalars['String']['output']>;
   bio?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<Scalars['String']['output']>;
+  teamGroup?: Maybe<Scalars['String']['output']>;
+  teamOrder?: Maybe<Scalars['Float']['output']>;
+  showOnTeam?: Maybe<Scalars['Boolean']['output']>;
   seo?: Maybe<UserSeo>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -1298,6 +1380,10 @@ export type UserFilter = {
   avatar?: InputMaybe<ImageFilter>;
   bio?: InputMaybe<StringFilter>;
   email?: InputMaybe<StringFilter>;
+  location?: InputMaybe<StringFilter>;
+  teamGroup?: InputMaybe<StringFilter>;
+  teamOrder?: InputMaybe<NumberFilter>;
+  showOnTeam?: InputMaybe<BooleanFilter>;
   seo?: InputMaybe<UserSeoFilter>;
 };
 
@@ -1389,6 +1475,35 @@ export type ConfigContactForm = {
   subject?: Maybe<Scalars['String']['output']>;
 };
 
+export type ConfigContributorCta = {
+  __typename?: 'ConfigContributorCta';
+  eyebrow?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  buttonText?: Maybe<Scalars['String']['output']>;
+  buttonLink?: Maybe<Scalars['String']['output']>;
+};
+
+export type ConfigFooter = {
+  __typename?: 'ConfigFooter';
+  copyrightText?: Maybe<Scalars['String']['output']>;
+};
+
+export type ConfigNotFoundQuickLinks = {
+  __typename?: 'ConfigNotFoundQuickLinks';
+  label?: Maybe<Scalars['String']['output']>;
+  href?: Maybe<Scalars['String']['output']>;
+};
+
+export type ConfigNotFound = {
+  __typename?: 'ConfigNotFound';
+  title?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  buttonText?: Maybe<Scalars['String']['output']>;
+  buttonLink?: Maybe<Scalars['String']['output']>;
+  quickLinks?: Maybe<Array<Maybe<ConfigNotFoundQuickLinks>>>;
+};
+
 export type ConfigCodeInjection = {
   __typename?: 'ConfigCodeInjection';
   headerCode?: Maybe<Scalars['String']['output']>;
@@ -1409,6 +1524,9 @@ export type Config = Node & Document & {
   favicon?: Maybe<Scalars['String']['output']>;
   seo?: Maybe<ConfigSeo>;
   contactForm?: Maybe<ConfigContactForm>;
+  contributorCta?: Maybe<ConfigContributorCta>;
+  footer?: Maybe<ConfigFooter>;
+  notFound?: Maybe<ConfigNotFound>;
   codeInjection?: Maybe<ConfigCodeInjection>;
   contactLinks?: Maybe<Array<Maybe<ConfigContactLinks>>>;
   footerStarfield?: Maybe<Scalars['Boolean']['output']>;
@@ -1443,6 +1561,31 @@ export type ConfigContactFormFilter = {
   subject?: InputMaybe<StringFilter>;
 };
 
+export type ConfigContributorCtaFilter = {
+  eyebrow?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  buttonText?: InputMaybe<StringFilter>;
+  buttonLink?: InputMaybe<StringFilter>;
+};
+
+export type ConfigFooterFilter = {
+  copyrightText?: InputMaybe<StringFilter>;
+};
+
+export type ConfigNotFoundQuickLinksFilter = {
+  label?: InputMaybe<StringFilter>;
+  href?: InputMaybe<StringFilter>;
+};
+
+export type ConfigNotFoundFilter = {
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  buttonText?: InputMaybe<StringFilter>;
+  buttonLink?: InputMaybe<StringFilter>;
+  quickLinks?: InputMaybe<ConfigNotFoundQuickLinksFilter>;
+};
+
 export type ConfigCodeInjectionFilter = {
   headerCode?: InputMaybe<StringFilter>;
   footerCode?: InputMaybe<StringFilter>;
@@ -1460,6 +1603,9 @@ export type ConfigFilter = {
   favicon?: InputMaybe<ImageFilter>;
   seo?: InputMaybe<ConfigSeoFilter>;
   contactForm?: InputMaybe<ConfigContactFormFilter>;
+  contributorCta?: InputMaybe<ConfigContributorCtaFilter>;
+  footer?: InputMaybe<ConfigFooterFilter>;
+  notFound?: InputMaybe<ConfigNotFoundFilter>;
   codeInjection?: InputMaybe<ConfigCodeInjectionFilter>;
   contactLinks?: InputMaybe<ConfigContactLinksFilter>;
   footerStarfield?: InputMaybe<BooleanFilter>;
@@ -1642,6 +1788,7 @@ export type BlogMutation = {
   seo?: InputMaybe<BlogSeoMutation>;
   pubDate?: InputMaybe<Scalars['String']['input']>;
   updatedDate?: InputMaybe<Scalars['String']['input']>;
+  readTime?: InputMaybe<Scalars['String']['input']>;
   categories?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   author?: InputMaybe<Scalars['String']['input']>;
   heroImage?: InputMaybe<Scalars['String']['input']>;
@@ -1664,6 +1811,9 @@ export type CategorySeoMutation = {
 export type CategoryMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  shortDescription?: InputMaybe<Scalars['String']['input']>;
+  displayOrder?: InputMaybe<Scalars['Float']['input']>;
+  showOnHome?: InputMaybe<Scalars['Boolean']['input']>;
   seo?: InputMaybe<CategorySeoMutation>;
 };
 
@@ -1676,6 +1826,28 @@ export type PageSeoMutation = {
   canonicalUrl?: InputMaybe<Scalars['String']['input']>;
   noindex?: InputMaybe<Scalars['Boolean']['input']>;
   nofollow?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type PageAuthorityTextMutation = {
+  source?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageAuthorityImagesMutation = {
+  source?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageAuthorityLinksMutation = {
+  source?: InputMaybe<Scalars['String']['input']>;
+  href?: InputMaybe<Scalars['String']['input']>;
+  label?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageAuthoritySectionsMutation = {
+  heading?: InputMaybe<Scalars['String']['input']>;
+  body?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageBlocksHomepageTemplateHeroMutation = {
@@ -2052,6 +2224,12 @@ export type PageMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   permalink?: InputMaybe<Scalars['String']['input']>;
   seo?: InputMaybe<PageSeoMutation>;
+  authorityTemplate?: InputMaybe<Scalars['String']['input']>;
+  authorityText?: InputMaybe<Array<InputMaybe<PageAuthorityTextMutation>>>;
+  authorityImages?: InputMaybe<Array<InputMaybe<PageAuthorityImagesMutation>>>;
+  authorityLinks?: InputMaybe<Array<InputMaybe<PageAuthorityLinksMutation>>>;
+  authorityUpdatedDate?: InputMaybe<Scalars['String']['input']>;
+  authoritySections?: InputMaybe<Array<InputMaybe<PageAuthoritySectionsMutation>>>;
   blocks?: InputMaybe<Array<InputMaybe<PageBlocksMutation>>>;
 };
 
@@ -2072,6 +2250,10 @@ export type UserMutation = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   bio?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  teamGroup?: InputMaybe<Scalars['String']['input']>;
+  teamOrder?: InputMaybe<Scalars['Float']['input']>;
+  showOnTeam?: InputMaybe<Scalars['Boolean']['input']>;
   seo?: InputMaybe<UserSeoMutation>;
 };
 
@@ -2109,6 +2291,31 @@ export type ConfigContactFormMutation = {
   subject?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ConfigContributorCtaMutation = {
+  eyebrow?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  buttonText?: InputMaybe<Scalars['String']['input']>;
+  buttonLink?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigFooterMutation = {
+  copyrightText?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigNotFoundQuickLinksMutation = {
+  label?: InputMaybe<Scalars['String']['input']>;
+  href?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConfigNotFoundMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  buttonText?: InputMaybe<Scalars['String']['input']>;
+  buttonLink?: InputMaybe<Scalars['String']['input']>;
+  quickLinks?: InputMaybe<Array<InputMaybe<ConfigNotFoundQuickLinksMutation>>>;
+};
+
 export type ConfigCodeInjectionMutation = {
   headerCode?: InputMaybe<Scalars['String']['input']>;
   footerCode?: InputMaybe<Scalars['String']['input']>;
@@ -2126,6 +2333,9 @@ export type ConfigMutation = {
   favicon?: InputMaybe<Scalars['String']['input']>;
   seo?: InputMaybe<ConfigSeoMutation>;
   contactForm?: InputMaybe<ConfigContactFormMutation>;
+  contributorCta?: InputMaybe<ConfigContributorCtaMutation>;
+  footer?: InputMaybe<ConfigFooterMutation>;
+  notFound?: InputMaybe<ConfigNotFoundMutation>;
   codeInjection?: InputMaybe<ConfigCodeInjectionMutation>;
   contactLinks?: InputMaybe<Array<InputMaybe<ConfigContactLinksMutation>>>;
   footerStarfield?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2189,12 +2399,23 @@ export type BlogFilter = {
   seo?: BlogSeoFilter | null | undefined;
   pubDate?: DatetimeFilter | null | undefined;
   updatedDate?: DatetimeFilter | null | undefined;
+  readTime?: StringFilter | null | undefined;
   categories?: StringFilter | null | undefined;
   author?: BlogAuthorFilter | null | undefined;
   heroImage?: ImageFilter | null | undefined;
   authorAlt?: StringFilter | null | undefined;
   heroImageAlt?: StringFilter | null | undefined;
   body?: BlogBodyFilter | null | undefined;
+};
+
+export type NumberFilter = {
+  lt?: number | null | undefined;
+  lte?: number | null | undefined;
+  gte?: number | null | undefined;
+  gt?: number | null | undefined;
+  eq?: number | null | undefined;
+  exists?: boolean | null | undefined;
+  in?: Array<number | null | undefined> | null | undefined;
 };
 
 export type CategorySeoFilter = {
@@ -2211,6 +2432,9 @@ export type CategorySeoFilter = {
 export type CategoryFilter = {
   title?: StringFilter | null | undefined;
   description?: StringFilter | null | undefined;
+  shortDescription?: StringFilter | null | undefined;
+  displayOrder?: NumberFilter | null | undefined;
+  showOnHome?: BooleanFilter | null | undefined;
   seo?: CategorySeoFilter | null | undefined;
 };
 
@@ -2223,6 +2447,28 @@ export type PageSeoFilter = {
   canonicalUrl?: StringFilter | null | undefined;
   noindex?: BooleanFilter | null | undefined;
   nofollow?: BooleanFilter | null | undefined;
+};
+
+export type PageAuthorityTextFilter = {
+  source?: StringFilter | null | undefined;
+  value?: StringFilter | null | undefined;
+};
+
+export type PageAuthorityImagesFilter = {
+  source?: StringFilter | null | undefined;
+  url?: ImageFilter | null | undefined;
+  alt?: StringFilter | null | undefined;
+};
+
+export type PageAuthorityLinksFilter = {
+  source?: StringFilter | null | undefined;
+  href?: StringFilter | null | undefined;
+  label?: StringFilter | null | undefined;
+};
+
+export type PageAuthoritySectionsFilter = {
+  heading?: StringFilter | null | undefined;
+  body?: StringFilter | null | undefined;
 };
 
 export type PageBlocksHomepageTemplateHeroFilter = {
@@ -2605,6 +2851,12 @@ export type PageFilter = {
   title?: StringFilter | null | undefined;
   permalink?: StringFilter | null | undefined;
   seo?: PageSeoFilter | null | undefined;
+  authorityTemplate?: StringFilter | null | undefined;
+  authorityText?: PageAuthorityTextFilter | null | undefined;
+  authorityImages?: PageAuthorityImagesFilter | null | undefined;
+  authorityLinks?: PageAuthorityLinksFilter | null | undefined;
+  authorityUpdatedDate?: DatetimeFilter | null | undefined;
+  authoritySections?: PageAuthoritySectionsFilter | null | undefined;
   blocks?: PageBlocksFilter | null | undefined;
 };
 
@@ -2625,6 +2877,10 @@ export type UserFilter = {
   avatar?: ImageFilter | null | undefined;
   bio?: StringFilter | null | undefined;
   email?: StringFilter | null | undefined;
+  location?: StringFilter | null | undefined;
+  teamGroup?: StringFilter | null | undefined;
+  teamOrder?: NumberFilter | null | undefined;
+  showOnTeam?: BooleanFilter | null | undefined;
   seo?: UserSeoFilter | null | undefined;
 };
 
@@ -2670,6 +2926,31 @@ export type ConfigContactFormFilter = {
   subject?: StringFilter | null | undefined;
 };
 
+export type ConfigContributorCtaFilter = {
+  eyebrow?: StringFilter | null | undefined;
+  title?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  buttonText?: StringFilter | null | undefined;
+  buttonLink?: StringFilter | null | undefined;
+};
+
+export type ConfigFooterFilter = {
+  copyrightText?: StringFilter | null | undefined;
+};
+
+export type ConfigNotFoundQuickLinksFilter = {
+  label?: StringFilter | null | undefined;
+  href?: StringFilter | null | undefined;
+};
+
+export type ConfigNotFoundFilter = {
+  title?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  buttonText?: StringFilter | null | undefined;
+  buttonLink?: StringFilter | null | undefined;
+  quickLinks?: ConfigNotFoundQuickLinksFilter | null | undefined;
+};
+
 export type ConfigCodeInjectionFilter = {
   headerCode?: StringFilter | null | undefined;
   footerCode?: StringFilter | null | undefined;
@@ -2687,16 +2968,19 @@ export type ConfigFilter = {
   favicon?: ImageFilter | null | undefined;
   seo?: ConfigSeoFilter | null | undefined;
   contactForm?: ConfigContactFormFilter | null | undefined;
+  contributorCta?: ConfigContributorCtaFilter | null | undefined;
+  footer?: ConfigFooterFilter | null | undefined;
+  notFound?: ConfigNotFoundFilter | null | undefined;
   codeInjection?: ConfigCodeInjectionFilter | null | undefined;
   contactLinks?: ConfigContactLinksFilter | null | undefined;
   footerStarfield?: BooleanFilter | null | undefined;
 };
 
-export type BlogPartsFragment = { __typename: 'Blog', viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null };
+export type BlogPartsFragment = { __typename: 'Blog', viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, readTime: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null };
 
-export type CategoryPartsFragment = { __typename: 'Category', title: string, description: string | null, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null };
+export type CategoryPartsFragment = { __typename: 'Category', title: string, description: string | null, shortDescription: string | null, displayOrder: number | null, showOnHome: boolean | null, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null };
 
-export type PagePartsFragment = { __typename: 'Page', viewPageShortcut: string | null, title: string, permalink: string | null, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
+export type PagePartsFragment = { __typename: 'Page', viewPageShortcut: string | null, title: string, permalink: string | null, authorityTemplate: string | null, authorityUpdatedDate: string | null, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, authorityText: Array<{ __typename: 'PageAuthorityText', source: string | null, value: string | null } | null> | null, authorityImages: Array<{ __typename: 'PageAuthorityImages', source: string | null, url: string | null, alt: string | null } | null> | null, authorityLinks: Array<{ __typename: 'PageAuthorityLinks', source: string | null, href: string | null, label: string | null } | null> | null, authoritySections: Array<{ __typename: 'PageAuthoritySections', heading: string | null, body: string | null } | null> | null, blocks: Array<
     | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, image: string | null, imageAlt: string | null } | null, why: { __typename: 'PageBlocksHomepageTemplateWhy', eyebrow: string | null, title: string | null, paragraphOne: string | null, paragraphTwo: string | null, standards: Array<{ __typename: 'PageBlocksHomepageTemplateWhyStandards', label: string | null, title: string | null, text: string | null } | null> | null } | null, newsroom: { __typename: 'PageBlocksHomepageTemplateNewsroom', heading: string | null, subheading: string | null, submitHeading: string | null, submitButtonText: string | null, submitButtonLink: string | null, prompts: Array<{ __typename: 'PageBlocksHomepageTemplateNewsroomPrompts', title: string | null, text: string | null } | null> | null } | null, wireFeature: { __typename: 'PageBlocksHomepageTemplateWireFeature', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', title: string | null, description: string | null, topics: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageTopics', number: string | null, title: string | null, text: string | null } | null> | null } | null, contact: { __typename: 'PageBlocksHomepageTemplateContact', eyebrow: string | null, title: string | null, description: string | null, note: string | null, cards: Array<{ __typename: 'PageBlocksHomepageTemplateContactCards', title: string | null, email: string | null, text: string | null, accent: boolean | null } | null> | null } | null }
     | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null }
     | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
@@ -2712,18 +2996,18 @@ export type PagePartsFragment = { __typename: 'Page', viewPageShortcut: string |
     | { __typename: 'PageBlocksSplit', title: string | null, body: any, reverse: boolean | null, image: { __typename: 'PageBlocksSplitImage', src: string | null, alt: string | null } | null, actions: Array<{ __typename: 'PageBlocksSplitActions', label: string | null, type: string | null, icon: string | null, link: string | null } | null> | null }
    | null> | null };
 
-export type UserPartsFragment = { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null };
+export type UserPartsFragment = { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null };
 
 export type NavigationPartsFragment = { __typename: 'Navigation', title: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null };
 
-export type ConfigPartsFragment = { __typename: 'Config', favicon: string | null, footerStarfield: boolean | null, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null };
+export type ConfigPartsFragment = { __typename: 'Config', favicon: string | null, footerStarfield: boolean | null, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, contributorCta: { __typename: 'ConfigContributorCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null } | null, footer: { __typename: 'ConfigFooter', copyrightText: string | null } | null, notFound: { __typename: 'ConfigNotFound', title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, quickLinks: Array<{ __typename: 'ConfigNotFoundQuickLinks', label: string | null, href: string | null } | null> | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null };
 
 export type BlogQueryVariables = Exact<{
   relativePath: string;
 }>;
 
 
-export type BlogQuery = { blog: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } };
+export type BlogQuery = { blog: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, readTime: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } };
 
 export type BlogConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -2735,14 +3019,14 @@ export type BlogConnectionQueryVariables = Exact<{
 }>;
 
 
-export type BlogConnectionQuery = { blogConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null } | null> | null } };
+export type BlogConnectionQuery = { blogConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, readTime: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null } | null> | null } };
 
 export type CategoryQueryVariables = Exact<{
   relativePath: string;
 }>;
 
 
-export type CategoryQuery = { category: { __typename: 'Category', id: string, title: string, description: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } };
+export type CategoryQuery = { category: { __typename: 'Category', id: string, title: string, description: string | null, shortDescription: string | null, displayOrder: number | null, showOnHome: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } };
 
 export type CategoryConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -2754,14 +3038,14 @@ export type CategoryConnectionQueryVariables = Exact<{
 }>;
 
 
-export type CategoryConnectionQuery = { categoryConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Category', id: string, title: string, description: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } | null } | null> | null } };
+export type CategoryConnectionQuery = { categoryConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Category', id: string, title: string, description: string | null, shortDescription: string | null, displayOrder: number | null, showOnHome: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } | null } | null> | null } };
 
 export type PageQueryVariables = Exact<{
   relativePath: string;
 }>;
 
 
-export type PageQuery = { page: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
+export type PageQuery = { page: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, authorityTemplate: string | null, authorityUpdatedDate: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, authorityText: Array<{ __typename: 'PageAuthorityText', source: string | null, value: string | null } | null> | null, authorityImages: Array<{ __typename: 'PageAuthorityImages', source: string | null, url: string | null, alt: string | null } | null> | null, authorityLinks: Array<{ __typename: 'PageAuthorityLinks', source: string | null, href: string | null, label: string | null } | null> | null, authoritySections: Array<{ __typename: 'PageAuthoritySections', heading: string | null, body: string | null } | null> | null, blocks: Array<
       | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, image: string | null, imageAlt: string | null } | null, why: { __typename: 'PageBlocksHomepageTemplateWhy', eyebrow: string | null, title: string | null, paragraphOne: string | null, paragraphTwo: string | null, standards: Array<{ __typename: 'PageBlocksHomepageTemplateWhyStandards', label: string | null, title: string | null, text: string | null } | null> | null } | null, newsroom: { __typename: 'PageBlocksHomepageTemplateNewsroom', heading: string | null, subheading: string | null, submitHeading: string | null, submitButtonText: string | null, submitButtonLink: string | null, prompts: Array<{ __typename: 'PageBlocksHomepageTemplateNewsroomPrompts', title: string | null, text: string | null } | null> | null } | null, wireFeature: { __typename: 'PageBlocksHomepageTemplateWireFeature', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', title: string | null, description: string | null, topics: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageTopics', number: string | null, title: string | null, text: string | null } | null> | null } | null, contact: { __typename: 'PageBlocksHomepageTemplateContact', eyebrow: string | null, title: string | null, description: string | null, note: string | null, cards: Array<{ __typename: 'PageBlocksHomepageTemplateContactCards', title: string | null, email: string | null, text: string | null, accent: boolean | null } | null> | null } | null }
       | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null }
       | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
@@ -2787,7 +3071,7 @@ export type PageConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
+export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, authorityTemplate: string | null, authorityUpdatedDate: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, authorityText: Array<{ __typename: 'PageAuthorityText', source: string | null, value: string | null } | null> | null, authorityImages: Array<{ __typename: 'PageAuthorityImages', source: string | null, url: string | null, alt: string | null } | null> | null, authorityLinks: Array<{ __typename: 'PageAuthorityLinks', source: string | null, href: string | null, label: string | null } | null> | null, authoritySections: Array<{ __typename: 'PageAuthoritySections', heading: string | null, body: string | null } | null> | null, blocks: Array<
           | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, image: string | null, imageAlt: string | null } | null, why: { __typename: 'PageBlocksHomepageTemplateWhy', eyebrow: string | null, title: string | null, paragraphOne: string | null, paragraphTwo: string | null, standards: Array<{ __typename: 'PageBlocksHomepageTemplateWhyStandards', label: string | null, title: string | null, text: string | null } | null> | null } | null, newsroom: { __typename: 'PageBlocksHomepageTemplateNewsroom', heading: string | null, subheading: string | null, submitHeading: string | null, submitButtonText: string | null, submitButtonLink: string | null, prompts: Array<{ __typename: 'PageBlocksHomepageTemplateNewsroomPrompts', title: string | null, text: string | null } | null> | null } | null, wireFeature: { __typename: 'PageBlocksHomepageTemplateWireFeature', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', title: string | null, description: string | null, topics: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageTopics', number: string | null, title: string | null, text: string | null } | null> | null } | null, contact: { __typename: 'PageBlocksHomepageTemplateContact', eyebrow: string | null, title: string | null, description: string | null, note: string | null, cards: Array<{ __typename: 'PageBlocksHomepageTemplateContactCards', title: string | null, email: string | null, text: string | null, accent: boolean | null } | null> | null } | null }
           | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null }
           | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
@@ -2808,7 +3092,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { user: { __typename: 'User', id: string, name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } };
+export type UserQuery = { user: { __typename: 'User', id: string, name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } };
 
 export type UserConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -2820,7 +3104,7 @@ export type UserConnectionQueryVariables = Exact<{
 }>;
 
 
-export type UserConnectionQuery = { userConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'User', id: string, name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } | null } | null> | null } };
+export type UserConnectionQuery = { userConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'User', id: string, name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, location: string | null, teamGroup: string | null, teamOrder: number | null, showOnTeam: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null } | null } | null> | null } };
 
 export type NavigationQueryVariables = Exact<{
   relativePath: string;
@@ -2846,7 +3130,7 @@ export type ConfigQueryVariables = Exact<{
 }>;
 
 
-export type ConfigQuery = { config: { __typename: 'Config', id: string, favicon: string | null, footerStarfield: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null } };
+export type ConfigQuery = { config: { __typename: 'Config', id: string, favicon: string | null, footerStarfield: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, contributorCta: { __typename: 'ConfigContributorCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null } | null, footer: { __typename: 'ConfigFooter', copyrightText: string | null } | null, notFound: { __typename: 'ConfigNotFound', title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, quickLinks: Array<{ __typename: 'ConfigNotFoundQuickLinks', label: string | null, href: string | null } | null> | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null } };
 
 export type ConfigConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -2858,7 +3142,7 @@ export type ConfigConnectionQueryVariables = Exact<{
 }>;
 
 
-export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, favicon: string | null, footerStarfield: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null } | null } | null> | null } };
+export type ConfigConnectionQuery = { configConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Config', id: string, favicon: string | null, footerStarfield: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, headerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, footerNavigation: { __typename: 'Navigation', title: string, id: string, items: Array<{ __typename: 'NavigationItems', label: string, href: string, children: Array<{ __typename: 'NavigationItemsChildren', label: string, href: string } | null> | null } | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null, seo: { __typename: 'ConfigSeo', title: string | null, description: string | null, siteOwner: string | null, logo: string | null, favicon: string | null, footerLogo: string | null } | null, contactForm: { __typename: 'ConfigContactForm', formspreeEndpoint: string | null, heading: string | null, description: string | null, buttonText: string | null, note: string | null, subject: string | null } | null, contributorCta: { __typename: 'ConfigContributorCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null } | null, footer: { __typename: 'ConfigFooter', copyrightText: string | null } | null, notFound: { __typename: 'ConfigNotFound', title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, quickLinks: Array<{ __typename: 'ConfigNotFoundQuickLinks', label: string | null, href: string | null } | null> | null } | null, codeInjection: { __typename: 'ConfigCodeInjection', headerCode: string | null, footerCode: string | null } | null, contactLinks: Array<{ __typename: 'ConfigContactLinks', title: string | null, link: string | null, icon: string | null } | null> | null } | null } | null> | null } };
 
 export const BlogPartsFragmentDoc = gql`
     fragment BlogParts on Blog {
@@ -2880,6 +3164,7 @@ export const BlogPartsFragmentDoc = gql`
   }
   pubDate
   updatedDate
+  readTime
   categories
   author {
     ... on User {
@@ -2889,6 +3174,10 @@ export const BlogPartsFragmentDoc = gql`
       avatar
       bio
       email
+      location
+      teamGroup
+      teamOrder
+      showOnTeam
       seo {
         __typename
         metaTitle
@@ -2925,6 +3214,9 @@ export const CategoryPartsFragmentDoc = gql`
   __typename
   title
   description
+  shortDescription
+  displayOrder
+  showOnHome
   seo {
     __typename
     metaTitle
@@ -2954,6 +3246,30 @@ export const PagePartsFragmentDoc = gql`
     canonicalUrl
     noindex
     nofollow
+  }
+  authorityTemplate
+  authorityText {
+    __typename
+    source
+    value
+  }
+  authorityImages {
+    __typename
+    source
+    url
+    alt
+  }
+  authorityLinks {
+    __typename
+    source
+    href
+    label
+  }
+  authorityUpdatedDate
+  authoritySections {
+    __typename
+    heading
+    body
   }
   blocks {
     __typename
@@ -3270,6 +3586,10 @@ export const UserPartsFragmentDoc = gql`
   avatar
   bio
   email
+  location
+  teamGroup
+  teamOrder
+  showOnTeam
   seo {
     __typename
     metaTitle
@@ -3376,6 +3696,30 @@ export const ConfigPartsFragmentDoc = gql`
     buttonText
     note
     subject
+  }
+  contributorCta {
+    __typename
+    eyebrow
+    title
+    description
+    buttonText
+    buttonLink
+  }
+  footer {
+    __typename
+    copyrightText
+  }
+  notFound {
+    __typename
+    title
+    description
+    buttonText
+    buttonLink
+    quickLinks {
+      __typename
+      label
+      href
+    }
   }
   codeInjection {
     __typename

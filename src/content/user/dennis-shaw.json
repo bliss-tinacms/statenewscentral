@@ -1,0 +1,17 @@
+{
+  "name": "Dennis Shaw",
+  "role": "Managing Editor",
+  "avatar": "https://res.cloudinary.com/efaz6azv/image/upload/v1792703216/statenewscentral/429c8301d762a8fc.jpg",
+  "bio": "Dennis manages the day-to-day operations of the newsroom from Salem, Oregon. He is responsible for the editorial calendar, story assignments, and the flow of publication across the desks.",
+  "email": "editorial@statenewsdigest.com",
+  "location": "Salem, Oregon",
+  "teamGroup": "Senior Editors",
+  "teamOrder": 3,
+  "showOnTeam": true,
+  "seo": {
+    "metaTitle": "Dennis Shaw | State News Digest",
+    "metaDescription": "Dennis manages the day-to-day operations of the newsroom from Salem, Oregon. He is responsible for the editorial calendar, story assignments, and the flow ",
+    "noindex": false,
+    "nofollow": false
+  }
+}

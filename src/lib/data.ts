@@ -18,7 +18,7 @@ import matter from 'gray-matter';
 import type { TinaRichTextContent } from '@tinacms/astro';
 import { requestWithMetadata } from '@tinacms/astro/data';
 import client from '../../tina/__generated__/client';
-import { BlogDocument, CategoryDocument, ConfigDocument, PageDocument, UserDocument } from '../../tina/__generated__/types';
+import { BlogDocument, CategoryDocument, ConfigDocument, NavigationDocument, PageDocument, UserDocument } from '../../tina/__generated__/types';
 
 function localContentRoots() {
 	const roots = [
@@ -144,6 +144,12 @@ function listLocalFrontmatter(collection: 'blog' | 'page') {
 	}
 	return null;
 }
+
+// Keep a freshly deployed immutable release renderable while Tina Cloud/GitHub
+// finishes indexing the same commit.
+export const getLocalPage = (slug: string) => readLocalPageFrontmatter(slug);
+export const listLocalPages = () => (listLocalFrontmatter('page') || []) as any[];
+export const listLocalBlogs = () => (listLocalFrontmatter('blog') || []) as any[];
 
 function listLocalJson(collection: 'category' | 'user' | 'navigation') {
 	for (const root of localContentRoots()) {
@@ -313,6 +319,9 @@ export async function getConfig() {
 			footerNavigation { ... on Navigation { _sys { relativePath } } }
 			seo { title description siteOwner logo favicon footerLogo }
 			contactForm { formspreeEndpoint heading description buttonText note subject }
+			contributorCta { eyebrow title description buttonText buttonLink }
+			footer { copyrightText }
+			notFound { title description buttonText buttonLink quickLinks { label href } }
 			codeInjection { headerCode footerCode }
 			contactLinks { title link icon }
 			footerStarfield
@@ -391,6 +400,19 @@ export const getHeaderNavigation = (config?: any) => getLiveNavigation(navigatio
 
 export const getFooterNavigation = (config?: any) => getLiveNavigation(navigationRelativePath(config?.footerNavigation) || 'footer.json');
 
+export const getNavigation = (slug: string) => getLiveNavigation(slug.endsWith('.json') ? slug : `${slug}.json`);
+
+export const getEditableNavigation = async (slug = 'header.json') => {
+	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
+	const live = await fetchLiveTinaResult<{ navigation: any }>(NavigationDocument, { relativePath });
+	if (live?.data?.navigation) return requestWithMetadata(Promise.resolve(live));
+	const generated = await client.queries.navigation({ relativePath });
+	if (!generated?.data?.navigation || !generated.query || !generated.variables) {
+		throw new Error(`Navigation editor query returned no authoritative Tina document: ${relativePath}`);
+	}
+	return requestWithMetadata(generated);
+};
+
 
 
 export const getPage = (slug: string) =>
@@ -418,7 +440,14 @@ async function getLivePage(slug: string) {
 	const query = `query Page($relativePath: String!) {
 		page(relativePath: $relativePath) {
 			title
+			permalink
 			seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
+			authorityTemplate
+			authorityText { source value }
+			authorityImages { source url alt }
+			authorityLinks { source href label }
+			authorityUpdatedDate
+			authoritySections { heading body }
 			blocks {
 				__typename
 				... on PageBlocksContent { body }
@@ -494,6 +523,7 @@ export async function getBlog(slug: string) {
 			permalink
 			pubDate
 			updatedDate
+			readTime
 			categories
 			author { ... on User { name role avatar bio email _sys { filename } } }
 			heroImage
@@ -520,6 +550,10 @@ async function getLiveUser(slug: string) {
 			avatar
 			bio
 			email
+			location
+			teamGroup
+			teamOrder
+			showOnTeam
 			seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
 			_sys { filename }
 		}
@@ -591,6 +625,9 @@ export async function getCategory(slug: string) {
 		category(relativePath: $relativePath) {
 			title
 			description
+			shortDescription
+			displayOrder
+			showOnHome
 			seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
 			_sys { filename }
 		}
@@ -605,7 +642,7 @@ export async function getCategory(slug: string) {
 export async function listCategories() {
 	const query = `query CategoryConnection($after: String) {
 		categoryConnection(first: 100, after: $after) {
-			edges { node { title description seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow } _sys { filename relativePath path } } }
+			edges { node { title description shortDescription displayOrder showOnHome seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow } _sys { filename relativePath path } } }
 			pageInfo { hasNextPage endCursor }
 		}
 	}`;
@@ -664,6 +701,7 @@ export async function listBlogs() {
 					permalink
 					pubDate
 					updatedDate
+					readTime
 					heroImage
 					heroImageAlt
 					seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }

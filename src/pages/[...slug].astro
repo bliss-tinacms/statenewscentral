@@ -7,7 +7,8 @@ import PageBody from '../components/islands/PageBody.astro';
 import BlogBody from '../components/islands/BlogBody.astro';
 import DemoCategoryArchive from '../components/demo/DemoCategoryArchive.astro';
 import Demo404 from '../components/demo/Demo404.astro';
-import { getBlog, getCategory, getConfig, getPublicPage, listBlogs, listCategories, listPages, type CmsCategory, type CmsPage } from '../lib/data';
+import FrontPage from '../templates/FrontPage.astro';
+import { getBlog, getCategory, getConfig, getPublicPage, listBlogs, listCategories, listLocalPages, listPages, type CmsCategory, type CmsPage } from '../lib/data';
 import { islands } from '../lib/islands';
 
 export const prerender = false;
@@ -15,7 +16,11 @@ export const prerender = false;
 const POSTS_PER_PAGE = 30;
 const routeSlug = (Astro.params.slug ?? '').toString().toLowerCase().replace(/^\/+|\/+$/g, '');
 const config = (await getConfig()).data?.config ?? null;
-const allPages = await listPages();
+const livePages = await listPages();
+const localPages = listLocalPages();
+const allPagesByFilename = new Map(localPages.map((page: any) => [String(page?._sys?.filename || page?.permalink || page?.title), page]));
+for (const page of livePages) allPagesByFilename.set(String(page?._sys?.filename || page?.permalink || page?.title), page);
+const allPages = [...allPagesByFilename.values()];
 const allPosts = await listBlogs();
 const allCategories = await listCategories();
 
@@ -83,7 +88,10 @@ function categoryFileMap(categories: any[]) {
   return map;
 }
 
-const matchedPage = allPages.find((page: CmsPage) => getPageRouteSlug(page) === routeSlug || page._sys.filename === routeSlug);
+const matchedPage = routeSlug
+  ? allPages.find((page: CmsPage) => getPageRouteSlug(page) === routeSlug || page._sys.filename === routeSlug)
+  : allPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/');
+
 let view: 'page' | 'category' | 'blog' | 'not-found' = 'not-found';
 let pageData: any = null;
 let pageTitle = '';
@@ -94,14 +102,17 @@ let blogContext: any = null;
 
 if (matchedPage) {
   const documentSlug = matchedPage._sys.filename ?? routeSlug;
-  const page = await getPublicPage(documentSlug);
-  const data = page.data?.page;
+  let page: Awaited<ReturnType<typeof getPublicPage>> | null = null;
+  if (routeSlug) {
+    try { page = await getPublicPage(documentSlug); } catch (_error) { /* immutable release fallback below */ }
+  }
+  const data = page?.data?.page ?? matchedPage;
   if (data) {
     const seo = data.seo ?? null;
     view = 'page';
     pageData = data;
-    pageTitle = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'Starter Site';
-    pageDescription = seo?.metaDescription || config?.seo?.description || 'Welcome to Starter Site.';
+    pageTitle = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'State News Digest';
+    pageDescription = seo?.metaDescription || config?.seo?.description || 'Independent reporting and analysis from State News Digest.';
   }
 }
 
@@ -130,8 +141,8 @@ if (view === 'not-found') {
       basePath: '/' + parsed.slug,
       hasPosts: posts.length > 0,
       seo: categorySeo,
-      seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'Starter Site'),
-      description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from Starter Site.' : 'Articles in the ' + archiveTitle + ' category will be published soon on Starter Site.'),
+      seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Digest'),
+      description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Digest.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Digest.'),
     };
   }
 }
@@ -175,14 +186,14 @@ if (view === 'not-found') {
 
 if (view === 'not-found') {
   Astro.response.status = 404;
-  pageTitle = '404 | Page Not Found | Starter Site';
-  pageDescription = 'The page you are looking for may have moved, been removed, or never existed.';
+  pageTitle = `404 | Page Not Found | ${config?.seo?.title || 'State News Digest'}`;
+  pageDescription = config?.notFound?.description || 'The page you are looking for may have moved, been removed, or never existed.';
 }
 ---
 
 {view === 'not-found' && (
   <Base title={pageTitle} description={pageDescription} noindex={true}>
-    <Demo404 posts={allPosts.slice(0, 3)} categories={allCategories} />
+    <Demo404 posts={allPosts.slice(0, 3)} categories={allCategories} config={config} />
   </Base>
 )}
 
@@ -197,9 +208,11 @@ if (view === 'not-found') {
     noindex={pageData.seo?.noindex || false}
     nofollow={pageData.seo?.nofollow || false}
   >
-    <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug: pageData._sys?.filename || routeSlug }} primary>
-      <PageBody data={pageData} config={config} />
-    </TinaIsland>
+    {routeSlug === ''
+      ? <FrontPage data={pageData} editData={pageData} config={config} posts={allPosts} />
+      : <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug: pageData._sys?.filename || routeSlug }} primary>
+          <PageBody data={pageData} config={config} />
+        </TinaIsland>}
   </Base>
 )}
 

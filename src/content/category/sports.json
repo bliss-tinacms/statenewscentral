@@ -1,0 +1,13 @@
+{
+  "title": "Sports",
+  "description": "Leagues, athletes, and the business of the game.",
+  "shortDescription": "Leagues, athletes, and the business of the game.",
+  "displayOrder": 5,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Sports | State News Digest",
+    "metaDescription": "Leagues, athletes, and the business of the game.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

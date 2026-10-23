@@ -1,0 +1,13 @@
+{
+  "title": "World News",
+  "description": "International events and their consequences at home.",
+  "shortDescription": "International events and their consequences at home.",
+  "displayOrder": 2,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "World News | State News Digest",
+    "metaDescription": "International events and their consequences at home.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

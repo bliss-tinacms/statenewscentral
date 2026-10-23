@@ -1,0 +1,13 @@
+{
+  "title": "Health",
+  "description": "Research and care that shape everyday choices.",
+  "shortDescription": "Research and care that shape everyday choices.",
+  "displayOrder": 6,
+  "showOnHome": true,
+  "seo": {
+    "metaTitle": "Health | State News Digest",
+    "metaDescription": "Research and care that shape everyday choices.",
+    "noindex": false,
+    "nofollow": false
+  }
+}

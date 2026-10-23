@@ -1,10 +1,6 @@
 {
-  "title": "Footer Menu",
+  "title": "Footer Navigation",
   "items": [
-    {
-      "label": "Home",
-      "href": "/"
-    },
     {
       "label": "About Us",
       "href": "/about/"
@@ -18,8 +14,16 @@
       "href": "/contact/"
     },
     {
-      "label": "Blog",
-      "href": "/blog/"
+      "label": "Editorial Guidelines",
+      "href": "/editorial-guidelines/"
+    },
+    {
+      "label": "Privacy Policy",
+      "href": "/privacy-policy/"
+    },
+    {
+      "label": "Terms of Use",
+      "href": "/terms-of-use/"
     }
   ]
 }

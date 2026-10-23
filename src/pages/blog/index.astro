@@ -4,14 +4,17 @@ import DemoCategoryArchive from '../../components/demo/DemoCategoryArchive.astro
 import { getConfig, listBlogs } from '../../lib/data';
 
 export const prerender = false;
-
-const posts = await listBlogs();
+const POSTS_PER_PAGE = 30;
+const page = Math.max(1, Number(Astro.url.searchParams.get('page') || '1') || 1);
+const allPosts = await listBlogs();
+const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
+const currentPage = Math.min(page, totalPages);
+const posts = allPosts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
 const config = (await getConfig()).data?.config ?? null;
-const siteName = config?.seo?.title ?? 'Starter Site';
+const siteName = config?.seo?.title ?? 'State News Digest';
 const title = `Blog | ${siteName}`;
-const description = config?.seo?.description ?? 'Latest blog posts.';
+const description = config?.seo?.description ?? 'Latest reporting from State News Digest.';
 ---
-
 <Base title={title} description={description} canonicalUrl="/blog/">
-	<DemoCategoryArchive archiveTitle="Blog" posts={posts} currentPage={1} totalPages={1} basePath="/blog" showCategoryBadge={false} />
+  <DemoCategoryArchive archiveTitle="Blog" posts={posts} currentPage={currentPage} totalPages={totalPages} basePath="/blog" showCategoryBadge={true} />
 </Base>

@@ -1,13 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Demo404 from '../components/demo/Demo404.astro';
-import { listBlogs } from '../lib/data';
-
-const title = '404 | Page Not Found | Starter Site';
-const description = 'The page you are looking for may have moved, been removed, or never existed.';
-const posts = (await listBlogs()).slice(0, 3);
+import DemoStaticFragment from '../components/state-news/DemoStaticFragment.astro';
+import { getConfig } from '../lib/data';
+const config=(await getConfig()).data?.config ?? null;
+const title=`404 | ${config?.seo?.title||'State News Digest'}`;
+const description=config?.notFound?.description||'The requested page could not be found.';
 ---
-
 <Base title={title} description={description} noindex={true}>
-  <Demo404 posts={posts} />
+  <main><DemoStaticFragment template="404" config={config}/></main>
 </Base>

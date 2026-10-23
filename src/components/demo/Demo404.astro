@@ -1,7 +1,8 @@
 ---
 import { getBlogPermalink } from '../../lib/permalinks';
 import { labelFromReference, getPostCategories } from './DemoHelpers';
-const { posts = [], categories = [] } = Astro.props;
+const { posts = [], categories = [], config = null } = Astro.props;
+const notFound = config?.notFound || {};
 const latest = posts.slice(0, 3);
 const sections = categories
   .map((category: any) => ({
@@ -14,7 +15,7 @@ function sectionUrl(slug: string) { return '/' + slug.toLowerCase().replace(/[^a
 ---
 
 <main class="ffn-demo ffn-demo-404">
-  <section class="er"><div class="w"><div class="er-in"><span class="er-num">404</span><div class="er-b"><div class="er-k"><b>Page not found</b></div><h1>This page is not here.</h1><p>The link may be broken, or the story may have moved. Nothing was deleted quietly — if a piece was taken down or corrected, we say so on the page.</p><div class="er-cta"><a href="/" class="pri">Back to the homepage →</a></div></div></div></div></section>
+  <section class="er"><div class="w"><div class="er-in"><span class="er-num">404</span><div class="er-b"><div class="er-k"><b>Page not found</b></div><h1>{notFound.title || 'This page is not here.'}</h1><p>{notFound.description || 'The link may be broken, or the story may have moved. Nothing was deleted quietly — if a piece was taken down or corrected, we say so on the page.'}</p><div class="er-cta"><a href={notFound.buttonLink || '/'} class="pri">{notFound.buttonText || 'Back to the homepage'} →</a></div></div></div></div></section>
   <section class="sc"><div class="w"><div class="eye"><i></i><span>While you are here</span></div><div class="h2">Latest reporting</div><div class="mo-g">
     {latest.map((post: any) => <a href={postUrl(post)} class="mi">{post.heroImage ? <img class="mi-img" src={post.heroImage} alt="" /> : <div class="mi-img demo-img"></div>}<div class="mi-c"><div class="mi-k">{labelFromReference(getPostCategories(post))}</div><div class="mi-h">{post.title}</div>{post.description && <p class="mi-x">{post.description}</p>}</div></a>)}
   </div></div></section>

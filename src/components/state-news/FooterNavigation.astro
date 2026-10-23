@@ -1,0 +1,9 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+const { navigation, legal = false } = Astro.props;
+const items = (navigation?.items || []).filter((item:any) => item?.label && item?.href);
+const isLegal = legal || /legal/i.test(String(navigation?.title || ''));
+---
+<nav class={isLegal ? 'snd-footer__legal' : ''} aria-label={navigation?.title || (isLegal ? 'Legal links' : 'Footer navigation')}>
+  {items.map((item:any) => <a class="scp0" href={item.href} data-tina-field={tinaField(item,'label')}>{item.label}</a>)}
+</nav>
