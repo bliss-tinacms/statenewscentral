@@ -19,9 +19,13 @@ const publishedPages = pages
     const href = normalizeHref(page.permalink, page?._sys?.filename);
     const slug = href === '/' ? 'home' : href.replace(/^\/+|\/+$/g, '');
     return { title: pageLabels[slug] || page.title, href, slug };
-  });
+  })
+  .filter((page: any) => page.slug !== 'sitemap');
 if (!publishedPages.some((page: any) => page.href === '/blog/')) publishedPages.push({ title: 'Blog', href: '/blog/', slug: 'blog' });
-publishedPages.sort((a: any, b: any) => pageOrder.indexOf(a.slug) - pageOrder.indexOf(b.slug));
+publishedPages.sort((a: any, b: any) => {
+  const aIndex = pageOrder.indexOf(a.slug); const bIndex = pageOrder.indexOf(b.slug);
+  return (aIndex < 0 ? Number.MAX_SAFE_INTEGER : aIndex) - (bIndex < 0 ? Number.MAX_SAFE_INTEGER : bIndex) || a.title.localeCompare(b.title);
+});
 const html = renderSitemapDemo(sitemapHtml, { pages: publishedPages, posts });
 ---
 <div class="state-news-authority-fragment" set:html={html} />

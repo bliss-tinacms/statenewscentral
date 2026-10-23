@@ -78,18 +78,21 @@ function fillPostCard($: CheerioAPI, card: any, post: any, selectors: { image: s
 }
 function populatePagination($: CheerioAPI, selector: string, current: number, pages: number, basePath: string) {
   const nav = $(selector).first();
-  const template = nav.children('a').first().clone();
+  const sourceLinks = nav.children('a');
+  const activeTemplate = sourceLinks.first().clone();
+  const inactiveTemplate = sourceLinks.eq(1).length ? sourceLinks.eq(1).clone() : activeTemplate.clone();
+  const nextTemplate = sourceLinks.last().length ? sourceLinks.last().clone() : inactiveTemplate.clone();
   nav.empty();
   if (pages <= 1) { nav.remove(); return; }
   const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
   const pageHref = (page: number) => page === 1 ? normalizedBase : normalizedBase === '/blog/' ? `${normalizedBase}?page=${page}` : `${normalizedBase}page/${page}/`;
   for (let page = 1; page <= pages; page += 1) {
-    const link = template.clone(); if (page > 1) removeTemplateIds($, link);
+    const link = (page === current ? activeTemplate : inactiveTemplate).clone(); if (page > 1) removeTemplateIds($, link);
     link.attr('href', pageHref(page)).text(String(page));
     if (page === current) link.attr('aria-current', 'page'); else link.removeAttr('aria-current');
     nav.append(link);
   }
-  if (current < pages) { const next = template.clone(); removeTemplateIds($, next); next.attr('href', pageHref(current + 1)).text('Next →'); nav.append(next); }
+  if (current < pages) { const next = nextTemplate.clone(); removeTemplateIds($, next); next.attr('href', pageHref(current + 1)).removeAttr('aria-current').text('Next →'); nav.append(next); }
 }
 
 export function renderArticleDemo(raw: string, options: any) {
@@ -133,7 +136,7 @@ export function renderArticleDemo(raw: string, options: any) {
   $('[data-dc-tpl="88"]').attr('href', author ? `/author/${authorSlug}/` : '/our-team/').text(authorName);
   $('[data-dc-tpl="89"]').text(author?.bio || 'State News Central newsroom contributor.');
 
-  const toc = $('[data-dc-tpl="92"]').first();
+  const toc = $('[data-dc-tpl="92"]').first().addClass('article-toc');
   if (!tocItems.length) toc.remove();
   else {
     const list = $('[data-dc-tpl="96"]').first(); const guide = $('[data-dc-tpl="97"]').first().clone(); const template = list.children('li').first().clone();
@@ -219,7 +222,17 @@ export function render404Demo(raw: string, options: any = {}) {
 
 export function renderSitemapDemo(raw: string, options: any) {
   const $ = load(raw, null, false); const { pages = [], posts = [] } = options;
-  const populate = (selector: string, items: any[], type: 'page' | 'post') => { const list = $(selector).first(); const template = list.children('li').first().clone(); list.empty(); items.forEach((item, index) => { const li = template.clone(); if (index) removeTemplateIds($, li); const link = li.find('a').first(); link.attr('href', type === 'post' ? postUrl(item) : item.href).find('span').first().text(item.title); list.append(li); }); };
+  const populate = (selector: string, items: any[], type: 'page' | 'post') => {
+    const list = $(selector).first(); const template = list.children('li').first().clone(); list.empty();
+    items.forEach((item, index) => {
+      const li = template.clone(); if (index) removeTemplateIds($, li);
+      const link = li.find('a').first(); link.attr('href', type === 'post' ? postUrl(item) : item.href).text(item.title);
+      const category = type === 'post' ? labelFromReference(item?.categories?.[0]?.category || item?.categories?.[0] || item?.category) : '';
+      const suffix = li.find('span').first();
+      if (type === 'post' && category) suffix.text(`— ${category}`); else suffix.remove();
+      list.append(li);
+    });
+  };
   populate('[data-dc-tpl="43"]', pages, 'page'); populate('[data-dc-tpl="71"]', posts, 'post');
   $('[data-dc-tpl="43"]').attr('data-sitemap-section', 'webpages'); $('[data-dc-tpl="71"]').attr('data-sitemap-section', 'posts'); return $.html();
 }

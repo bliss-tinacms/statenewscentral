@@ -2,7 +2,11 @@
   "title": "Legal Navigation",
   "items": [
     { "label": "Privacy", "href": "/privacy-policy/" },
-    { "label": "Terms of Use", "href": "/terms-of-use/" },
-    { "label": "Cookies", "href": "/cookie-policy/" }
+    { "label": "Terms", "href": "/terms-of-use/" },
+    { "label": "Cookie", "href": "/cookie-policy/" },
+    { "label": "AI", "href": "/ai-policy/" },
+    { "label": "DMCA", "href": "/dmca-policy/" },
+    { "label": "Sponsored", "href": "/sponsored-content-policy/" },
+    { "label": "Sitemap", "href": "/sitemap/" }
   ]
 }

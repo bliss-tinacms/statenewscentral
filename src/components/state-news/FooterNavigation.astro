@@ -1,8 +1,20 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
 const { navigation, legal = false } = Astro.props;
-const items = (navigation?.items || []).filter((item:any) => item?.label && item?.href);
 const isLegal = legal || /legal/i.test(String(navigation?.title || ''));
+const sourceItems = (navigation?.items || []).filter((item:any) => item?.label && item?.href);
+const legalDefaults = [
+  { label: 'Privacy', href: '/privacy-policy/' },
+  { label: 'Terms', href: '/terms-of-use/' },
+  { label: 'Cookie', href: '/cookie-policy/' },
+  { label: 'AI', href: '/ai-policy/' },
+  { label: 'DMCA', href: '/dmca-policy/' },
+  { label: 'Sponsored', href: '/sponsored-content-policy/' },
+  { label: 'Sitemap', href: '/sitemap/' },
+];
+const items = isLegal
+  ? [...sourceItems, ...legalDefaults.filter((fallback) => !sourceItems.some((item:any) => item.href === fallback.href))]
+  : sourceItems;
 ---
 <nav class={isLegal ? 'snd-footer__legal' : 'snd-footer__links'} aria-label={navigation?.title || (isLegal ? 'Legal links' : 'Footer navigation')}>
   {items.map((item:any) => <a class="scp0" href={item.href} data-tina-field={tinaField(item,'label')}>{item.label}</a>)}
