@@ -5,6 +5,7 @@ import DemoAuthorArchive from '../../components/demo/DemoAuthorArchive.astro';
 import Demo404 from '../../components/demo/Demo404.astro';
 import { islands } from '../../lib/islands';
 import { getConfig, getUser, listBlogs, listCategories } from '../../lib/data';
+import { resolveSeo } from '../../lib/seo';
 
 const POSTS_PER_PAGE = 6;
 
@@ -64,8 +65,13 @@ const authorObject = allPosts.find((post) => post.author && typeof post.author =
 const archiveTitle = editableAuthor?.name || labelFromReference(authorObject) || Astro.props.archiveTitle || 'Author';
 const authorSeo = (editableAuthor as any)?.seo || (authorObject as any)?.seo || null;
 const basePath = '/author/' + parsed.slug;
-const seoTitle = authorSeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central');
-const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from State News Central.';
+const resolvedSeo = resolveSeo({
+	seo: authorSeo,
+	titleFallback: archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central'),
+	descriptionFallback: editableAuthor?.bio || 'Read the latest articles by ' + archiveTitle + ' from State News Central.',
+	imageFallback: editableAuthor?.avatar,
+	canonicalFallback: currentPage > 1 ? `${basePath}/page/${currentPage}/` : basePath + '/',
+});
 ---
 
 {notFound ? (
@@ -74,14 +80,14 @@ const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read t
 	</Base>
 ) : (
 	<Base
-		title={seoTitle}
-		description={description}
-		image={authorSeo?.ogImage || editableAuthor?.avatar || undefined}
-		ogTitle={authorSeo?.ogTitle || seoTitle}
-		ogDescription={authorSeo?.ogDescription || description}
-		canonicalUrl={authorSeo?.canonicalUrl || (currentPage > 1 ? `${basePath}/page/${currentPage}/` : basePath + '/')}
-		noindex={authorSeo?.noindex || false}
-		nofollow={authorSeo?.nofollow || false}
+		title={resolvedSeo.title}
+		description={resolvedSeo.description}
+		image={resolvedSeo.image}
+		ogTitle={resolvedSeo.ogTitle}
+		ogDescription={resolvedSeo.ogDescription}
+		canonicalUrl={resolvedSeo.canonicalUrl}
+		noindex={resolvedSeo.noindex}
+		nofollow={resolvedSeo.nofollow}
 	>
 		<TinaIsland name="author" wrapper={islands.author.wrapper} params={{ slug: parsed.slug, page: String(currentPage) }} primary>
 			<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />

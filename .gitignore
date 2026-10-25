@@ -43,6 +43,7 @@ node_modules/
 .env.production
 site.manifest.json
 *.site-manifest.json
+seo-audit-report.json
 
 # Yarn Integrity file
 .yarn-integrity

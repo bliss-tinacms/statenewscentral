@@ -9,6 +9,7 @@ import DemoCategoryArchive from '../components/demo/DemoCategoryArchive.astro';
 import Demo404 from '../components/demo/Demo404.astro';
 import { getBlog, getCategory, getConfig, getPublicPage, isPublishedBlog, isPublishedPage, listBlogs, listCategories, listLocalPages, listPages, type CmsCategory, type CmsPage } from '../lib/data';
 import { islands } from '../lib/islands';
+import { preferFreshConnectionRecord, resolveSeo } from '../lib/seo';
 
 export const prerender = false;
 
@@ -100,6 +101,7 @@ let view: 'page' | 'category' | 'blog' | 'not-found' = 'not-found';
 let pageData: any = null;
 let pageTitle = '';
 let pageDescription = '';
+let pageResolvedSeo: ReturnType<typeof resolveSeo> | null = null;
 
 let categoryContext: any = null;
 let blogContext: any = null;
@@ -110,11 +112,16 @@ if (matchedPage) {
   try { page = await getPublicPage(documentSlug); } catch (_error) { /* immutable release fallback below */ }
   const data = page?.data?.page ?? matchedPage;
   if (data) {
-    const seo = data.seo ?? null;
+    const resolvedSeo = resolveSeo({
+      seo: data.seo,
+      titleFallback: data.title || data.seoTitle || config?.seo?.title || 'State News Central',
+      descriptionFallback: config?.seo?.description || 'News with context about the communities and places behind the story.',
+    });
     view = 'page';
     pageData = data;
-    pageTitle = seo?.metaTitle || data.title || data.seoTitle || config?.seo?.title || 'State News Central';
-    pageDescription = seo?.metaDescription || config?.seo?.description || 'News with context about the communities and places behind the story.';
+    pageResolvedSeo = resolvedSeo;
+    pageTitle = resolvedSeo.title;
+    pageDescription = resolvedSeo.description;
   }
 }
 
@@ -133,9 +140,15 @@ if (view === 'not-found') {
       // The connection query drives routing and is also the freshest public payload after a
       // Publisher save; prefer it over a separately indexed singleton query so archive SEO and
       // copy reflect the same saved category immediately.
-      const categoryFromPosts = listedCategory || fetchedCategory || (findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null);
-      const archiveTitle = listedCategory?.title || fetchedCategory?.title || labelFromReference(findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug)) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
-      const categorySeo = (listedCategory as any)?.seo || (fetchedCategory as any)?.seo || (categoryFromPosts as any)?.seo || null;
+      const postCategory = findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null;
+      const categoryFromPosts = preferFreshConnectionRecord(listedCategory, fetchedCategory, postCategory);
+      const archiveTitle = categoryFromPosts?.title || labelFromReference(postCategory) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
+      const resolvedSeo = resolveSeo({
+        seo: (categoryFromPosts as any)?.seo,
+        titleFallback: archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central'),
+        descriptionFallback: categoryFromPosts?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Central.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Central.'),
+        canonicalFallback: parsed.page > 1 ? `/${parsed.slug}/page/${parsed.page}/` : `/${parsed.slug}/`,
+      });
       view = 'category';
       categoryContext = {
         parsed,
@@ -147,9 +160,7 @@ if (view === 'not-found') {
         categoryDocumentSlug: categoryEntry.filename || categoryFromPosts?._sys?.filename || archiveTitle,
         basePath: '/' + parsed.slug,
         hasPosts: posts.length > 0,
-        seo: categorySeo,
-        seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central'),
-        description: categorySeo?.metaDescription || listedCategory?.description || fetchedCategory?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Central.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Central.'),
+        resolvedSeo,
       };
     }
   }
@@ -168,25 +179,29 @@ if (view === 'not-found') {
         .filter((post) => post._sys.filename !== documentSlug)
         .filter((post) => getReferenceKeys(getPostCategories(post)).some((key) => currentCategoryKeys.includes(key)))
         .slice(0, 3);
-      const seo = data.seo ?? null;
-      const title = seo?.metaTitle || data.title || '';
-      const description = seo?.metaDescription || data.description || '';
+      const resolvedSeo = resolveSeo({
+        seo: data.seo,
+        titleFallback: data.title,
+        descriptionFallback: data.description,
+        imageFallback: data.heroImage,
+        canonicalFallback: getBlogPermalink(data) + '/',
+      });
       view = 'blog';
       blogContext = {
         documentSlug,
         data,
         relatedPosts,
         layoutProps: {
-          title,
-          description,
+          title: resolvedSeo.title,
+          description: resolvedSeo.description,
           pubDate: data.pubDate ? new Date(data.pubDate) : new Date(),
           updatedDate: data.updatedDate ? new Date(data.updatedDate) : undefined,
-          heroImage: seo?.ogImage || data.heroImage || null,
-          ogTitle: seo?.ogTitle || title,
-          ogDescription: seo?.ogDescription || description,
-          canonicalUrl: seo?.canonicalUrl || getBlogPermalink(data) + '/',
-          noindex: seo?.noindex || false,
-          nofollow: seo?.nofollow || false,
+          heroImage: resolvedSeo.image || null,
+          ogTitle: resolvedSeo.ogTitle,
+          ogDescription: resolvedSeo.ogDescription,
+          canonicalUrl: resolvedSeo.canonicalUrl,
+          noindex: resolvedSeo.noindex,
+          nofollow: resolvedSeo.nofollow,
         },
       };
     }
@@ -205,16 +220,16 @@ if (view === 'not-found') {
   </Base>
 )}
 
-{view === 'page' && pageData && (
+{view === 'page' && pageData && pageResolvedSeo && (
   <Base
     title={pageTitle}
     description={pageDescription}
-    image={pageData.seo?.ogImage || undefined}
-    ogTitle={pageData.seo?.ogTitle || pageTitle}
-    ogDescription={pageData.seo?.ogDescription || pageData.seo?.metaDescription || pageDescription}
-    canonicalUrl={pageData.seo?.canonicalUrl || undefined}
-    noindex={pageData.seo?.noindex || false}
-    nofollow={pageData.seo?.nofollow || false}
+    image={pageResolvedSeo.image}
+    ogTitle={pageResolvedSeo.ogTitle}
+    ogDescription={pageResolvedSeo.ogDescription}
+    canonicalUrl={pageResolvedSeo.canonicalUrl}
+    noindex={pageResolvedSeo.noindex}
+    nofollow={pageResolvedSeo.nofollow}
   >
     <TinaIsland name="page" wrapper={islands.page.wrapper} params={{ slug: pageData._sys?.filename || routeSlug || 'home' }} primary>
       <PageBody data={pageData} config={config} posts={allPosts} categories={allCategories} />
@@ -224,14 +239,14 @@ if (view === 'not-found') {
 
 {view === 'category' && categoryContext && (
   <Base
-    title={categoryContext.seoTitle}
-    description={categoryContext.description}
-    image={categoryContext.seo?.ogImage || undefined}
-    ogTitle={categoryContext.seo?.ogTitle || categoryContext.seoTitle}
-    ogDescription={categoryContext.seo?.ogDescription || categoryContext.description}
-    canonicalUrl={categoryContext.seo?.canonicalUrl || (categoryContext.currentPage > 1 ? `${categoryContext.basePath}/page/${categoryContext.currentPage}/` : categoryContext.basePath + '/')}
-    noindex={categoryContext.seo?.noindex || false}
-    nofollow={categoryContext.seo?.nofollow || false}
+    title={categoryContext.resolvedSeo.title}
+    description={categoryContext.resolvedSeo.description}
+    image={categoryContext.resolvedSeo.image}
+    ogTitle={categoryContext.resolvedSeo.ogTitle}
+    ogDescription={categoryContext.resolvedSeo.ogDescription}
+    canonicalUrl={categoryContext.resolvedSeo.canonicalUrl}
+    noindex={categoryContext.resolvedSeo.noindex}
+    nofollow={categoryContext.resolvedSeo.nofollow}
   >
     <TinaIsland name="category" wrapper={islands.category.wrapper} params={{ slug: categoryContext.categoryDocumentSlug, page: String(categoryContext.currentPage) }} primary>
       <DemoCategoryArchive archiveTitle={categoryContext.archiveTitle} posts={categoryContext.posts} currentPage={categoryContext.currentPage} totalPages={categoryContext.totalPages} basePath={categoryContext.basePath} category={categoryContext.categoryFromPosts} />
