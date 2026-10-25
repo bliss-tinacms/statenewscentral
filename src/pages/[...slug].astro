@@ -113,7 +113,7 @@ if (matchedPage) {
     const seo = data.seo ?? null;
     view = 'page';
     pageData = data;
-    pageTitle = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'State News Central';
+    pageTitle = seo?.metaTitle || data.title || data.seoTitle || config?.seo?.title || 'State News Central';
     pageDescription = seo?.metaDescription || config?.seo?.description || 'News with context about the communities and places behind the story.';
   }
 }
@@ -128,10 +128,14 @@ if (view === 'not-found') {
     if (parsed.valid && parsed.page <= totalPages) {
       const currentPage = parsed.page;
       const posts = allCategoryPosts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
-      const editableCategory = (await getCategory(categoryEntry.filename || parsed.slug)).data?.category ?? null;
-      const categoryFromPosts = editableCategory || (findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null) || categoryEntry.data;
-      const archiveTitle = editableCategory?.title || labelFromReference(findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug)) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
-      const categorySeo = (editableCategory as any)?.seo || (categoryFromPosts as any)?.seo || (categoryEntry.data as any)?.seo || null;
+      const listedCategory = categoryEntry.data;
+      const fetchedCategory = (await getCategory(categoryEntry.filename || parsed.slug)).data?.category ?? null;
+      // The connection query drives routing and is also the freshest public payload after a
+      // Publisher save; prefer it over a separately indexed singleton query so archive SEO and
+      // copy reflect the same saved category immediately.
+      const categoryFromPosts = listedCategory || fetchedCategory || (findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug) as CmsCategory | null);
+      const archiveTitle = listedCategory?.title || fetchedCategory?.title || labelFromReference(findReferenceBySlug(getPostCategories(allCategoryPosts[0]), parsed.slug)) || categoryEntry.label || titleCase(parsed.slug) || 'Category';
+      const categorySeo = (listedCategory as any)?.seo || (fetchedCategory as any)?.seo || (categoryFromPosts as any)?.seo || null;
       view = 'category';
       categoryContext = {
         parsed,
@@ -145,7 +149,7 @@ if (view === 'not-found') {
         hasPosts: posts.length > 0,
         seo: categorySeo,
         seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'State News Central'),
-        description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Central.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Central.'),
+        description: categorySeo?.metaDescription || listedCategory?.description || fetchedCategory?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from State News Central.' : 'Articles in the ' + archiveTitle + ' category will be published soon on State News Central.'),
       };
     }
   }
