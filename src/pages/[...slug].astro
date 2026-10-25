@@ -93,11 +93,8 @@ function categoryFileMap(categories: any[]) {
 
 const matchedPage = routeSlug
   ? allPages.find((page: CmsPage) => getPageRouteSlug(page) === routeSlug || page._sys.filename === routeSlug)
-  // The listPages live query is intentionally lightweight and therefore lacks
-  // homepage authorityLink/image/text fields. Prefer the complete immutable
-  // home document so SSR never emits unresolved __SND_* placeholders.
-  : localPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/')
-    || allPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/');
+  : allPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/')
+    || localPages.find((page: CmsPage) => page._sys.filename === 'home' || page.permalink === '/');
 
 let view: 'page' | 'category' | 'blog' | 'not-found' = 'not-found';
 let pageData: any = null;
@@ -110,9 +107,7 @@ let blogContext: any = null;
 if (matchedPage) {
   const documentSlug = matchedPage._sys.filename ?? routeSlug;
   let page: Awaited<ReturnType<typeof getPublicPage>> | null = null;
-  if (routeSlug) {
-    try { page = await getPublicPage(documentSlug); } catch (_error) { /* immutable release fallback below */ }
-  }
+  try { page = await getPublicPage(documentSlug); } catch (_error) { /* immutable release fallback below */ }
   const data = page?.data?.page ?? matchedPage;
   if (data) {
     const seo = data.seo ?? null;
