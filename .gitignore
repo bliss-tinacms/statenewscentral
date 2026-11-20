@@ -84,3 +84,7 @@ _hermes-disabled
 .env
 .env.local
 .env.production
+
+# Tina build artifacts can contain content credentials.
+/tina/generated/
+/tina/__generated__/
